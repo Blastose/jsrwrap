@@ -21,6 +21,14 @@ type Scope =
 	| 'wikiedit'
 	| 'wikiread';
 
+type accessTokenJsonResponse = {
+	access_token: string;
+	token_type: string;
+	expires_in: string;
+	scope: string;
+	refresh_token: string;
+};
+
 type OAuthConfig = {
 	clientId: string;
 	clientSecret: string;
@@ -59,19 +67,11 @@ class Jsrwrap {
 			body: `grant_type=password&username=${username}&password=${password}`
 		});
 
-		type jsonResponse = {
-			access_token: string;
-			token_type: string;
-			expires_in: string;
-			scope: string;
-			refresh_token: string;
-		};
-
 		if (res.status !== 200) {
 			throw new Error('Invalid credentials');
 		}
 
-		const resJson = (await res.json()) as jsonResponse;
+		const resJson = (await res.json()) as accessTokenJsonResponse;
 
 		return new Jsrwrap(resJson.access_token);
 	}
@@ -106,19 +106,11 @@ class Jsrwrap {
 			body: `grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}`
 		});
 
-		type jsonResponse = {
-			access_token: string;
-			token_type: string;
-			expires_in: string;
-			scope: string;
-			refresh_token: string;
-		};
-
 		if (res.status !== 200) {
 			throw new Error('Invalid credentials');
 		}
 
-		const resJson = (await res.json()) as jsonResponse;
+		const resJson = (await res.json()) as accessTokenJsonResponse;
 
 		return new Jsrwrap(resJson.access_token);
 	}
