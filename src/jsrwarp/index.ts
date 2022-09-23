@@ -26,7 +26,7 @@ type accessTokenJsonResponse = {
 	token_type: string;
 	expires_in: string;
 	scope: string;
-	refresh_token: string;
+	refresh_token?: string;
 };
 
 type OAuthConfig = {
@@ -112,6 +112,42 @@ class Jsrwrap {
 
 		const resJson = (await res.json()) as accessTokenJsonResponse;
 
+		return new Jsrwrap(resJson.access_token);
+	}
+
+	static async fromApplicationOnlyAuth(
+		clientId: string,
+		clientSecret: string,
+		grantType: 'client_credentials' | 'https://oauth.reddit.com/grants/installed_client',
+		deviceId?: string
+	) {
+		const clientIdAndSecret = Buffer.from(`${clientId}:${clientSecret}`);
+		const base64EncodedClientIdAndSecret = clientIdAndSecret.toString('base64');
+
+		let body = `grant_type=${grantType}`;
+
+		if (grantType === 'https://oauth.reddit.com/grants/installed_client') {
+			if (!deviceId) {
+				throw new Error('deviceId is required when using the installed_client grant');
+			}
+			body = `${body}&device_id=${deviceId}`;
+		}
+
+		const res = await fetch('https://www.reddit.com/api/v1/access_token', {
+			method: 'POST',
+			headers: {
+				Authorization: `Basic ${base64EncodedClientIdAndSecret}`,
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: body
+		});
+
+		if (res.status !== 200) {
+			throw new Error('Invalid credentials');
+		}
+
+		const resJson = (await res.json()) as accessTokenJsonResponse;
+		console.log(resJson);
 		return new Jsrwrap(resJson.access_token);
 	}
 }
