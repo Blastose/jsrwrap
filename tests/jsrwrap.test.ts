@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Jsrwrap } from '../src/jsrwarp/index';
 
 describe('Jsrwrap static methods', () => {
@@ -19,14 +20,22 @@ describe('Jsrwrap static methods', () => {
 describe('Jsrwrap token retrieval', () => {
 	// Code is one-time use so repeated calls to this test should fail
 	// You can get a code from the above link and extracting the code from the query param
-	test('reddit returns a JSON with an access token when authenticating with code', async () => {
+	test.skip('reddit returns a JSON with an access token when authenticating with code', async () => {
 		const reddit = await Jsrwrap.fromAuthCode(
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			process.env.CLIENT_ID!,
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			process.env.CLIENT_SECRET!,
 			'http://localhost:5173',
 			'flAqmMMLowCKKagZLMRR72yJcs7rrg'
+		);
+		expect(reddit).toBeInstanceOf(Jsrwrap);
+	});
+
+	test('reddit returns a JSON with an access token when authenticating with username and password for a script app', async () => {
+		const reddit = await Jsrwrap.fromUsernamePassword(
+			process.env.SCRIPT_CLIENT_ID!,
+			process.env.SCRIPT_CLIENT_SECRET!,
+			process.env.USERNAME!,
+			process.env.PASSWORD!
 		);
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});

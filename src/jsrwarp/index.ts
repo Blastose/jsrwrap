@@ -41,6 +41,41 @@ class Jsrwrap {
 		this.accessToken = accessToken;
 	}
 
+	static async fromUsernamePassword(
+		clientId: string,
+		clientSecret: string,
+		username: string,
+		password: string
+	) {
+		const clientIdAndSecret = Buffer.from(`${clientId}:${clientSecret}`);
+		const base64EncodedClientIdAndSecret = clientIdAndSecret.toString('base64');
+
+		const res = await fetch('https://www.reddit.com/api/v1/access_token', {
+			method: 'POST',
+			headers: {
+				Authorization: `Basic ${base64EncodedClientIdAndSecret}`,
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: `grant_type=password&username=${username}&password=${password}`
+		});
+
+		type jsonResponse = {
+			access_token: string;
+			token_type: string;
+			expires_in: string;
+			scope: string;
+			refresh_token: string;
+		};
+
+		if (res.status !== 200) {
+			throw new Error('Invalid credentials');
+		}
+
+		const resJson = (await res.json()) as jsonResponse;
+
+		return new Jsrwrap(resJson.access_token);
+	}
+
 	static createAuthUrl(
 		clientId: string,
 		state: string,
