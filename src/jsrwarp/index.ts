@@ -49,6 +49,19 @@ class Jsrwrap {
 		this.accessToken = accessToken;
 	}
 
+	static async retrieveAccessToken(httpBasicAuth: string, body: string) {
+		const res = fetch('https://www.reddit.com/api/v1/access_token', {
+			method: 'POST',
+			headers: {
+				Authorization: `Basic ${httpBasicAuth}`,
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: body
+		});
+
+		return res;
+	}
+
 	static async fromUsernamePassword(
 		clientId: string,
 		clientSecret: string,
@@ -58,14 +71,8 @@ class Jsrwrap {
 		const clientIdAndSecret = Buffer.from(`${clientId}:${clientSecret}`);
 		const base64EncodedClientIdAndSecret = clientIdAndSecret.toString('base64');
 
-		const res = await fetch('https://www.reddit.com/api/v1/access_token', {
-			method: 'POST',
-			headers: {
-				Authorization: `Basic ${base64EncodedClientIdAndSecret}`,
-				'Content-Type': 'application/x-www-form-urlencoded'
-			},
-			body: `grant_type=password&username=${username}&password=${password}`
-		});
+		const body = `grant_type=password&username=${username}&password=${password}`;
+		const res = await this.retrieveAccessToken(base64EncodedClientIdAndSecret, body);
 
 		if (res.status !== 200) {
 			throw new Error('Invalid credentials');
@@ -97,14 +104,8 @@ class Jsrwrap {
 		const clientIdAndSecret = Buffer.from(`${clientId}:${clientSecret}`);
 		const base64EncodedClientIdAndSecret = clientIdAndSecret.toString('base64');
 
-		const res = await fetch('https://www.reddit.com/api/v1/access_token', {
-			method: 'POST',
-			headers: {
-				Authorization: `Basic ${base64EncodedClientIdAndSecret}`,
-				'Content-Type': 'application/x-www-form-urlencoded'
-			},
-			body: `grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}`
-		});
+		const body = `grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}`;
+		const res = await this.retrieveAccessToken(base64EncodedClientIdAndSecret, body);
 
 		if (res.status !== 200) {
 			if (res.status === 401) {
@@ -142,14 +143,7 @@ class Jsrwrap {
 			body = `${body}&device_id=${deviceId}`;
 		}
 
-		const res = await fetch('https://www.reddit.com/api/v1/access_token', {
-			method: 'POST',
-			headers: {
-				Authorization: `Basic ${base64EncodedClientIdAndSecret}`,
-				'Content-Type': 'application/x-www-form-urlencoded'
-			},
-			body: body
-		});
+		const res = await this.retrieveAccessToken(base64EncodedClientIdAndSecret, body);
 
 		if (res.status !== 200) {
 			throw new Error('Invalid credentials');
