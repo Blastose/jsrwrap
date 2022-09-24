@@ -57,10 +57,11 @@ class Jsrwrap {
 
 	async refreshAccessToken() {
 		if (this.refreshToken) {
-			const clientIdAndSecret = Buffer.from(`${this.clientId}:${this.clientSecret}`);
-			const base64EncodedClientIdAndSecret = clientIdAndSecret.toString('base64');
 			const body = `grant_type=refresh_token&refresh_token=${this.refreshToken}`;
-			const res = await Jsrwrap.retrieveAccessToken(base64EncodedClientIdAndSecret, body);
+			const res = await Jsrwrap.retrieveAccessToken(
+				Jsrwrap.encodeClientIdAndSecret(this.clientId, this.clientSecret),
+				body
+			);
 
 			if (res.status !== 200) {
 				throw new Error('Invalid refresh_token');
@@ -70,6 +71,11 @@ class Jsrwrap {
 		} else {
 			throw new Error('No refresh_token; cannot refresh access token');
 		}
+	}
+
+	static encodeClientIdAndSecret(clientId: string, clientSecret: string) {
+		const clientIdAndSecret = Buffer.from(`${clientId}:${clientSecret}`);
+		return clientIdAndSecret.toString('base64');
 	}
 
 	static async retrieveAccessToken(httpBasicAuth: string, body: string) {
@@ -91,11 +97,11 @@ class Jsrwrap {
 		username: string,
 		password: string
 	) {
-		const clientIdAndSecret = Buffer.from(`${clientId}:${clientSecret}`);
-		const base64EncodedClientIdAndSecret = clientIdAndSecret.toString('base64');
-
 		const body = `grant_type=password&username=${username}&password=${password}`;
-		const res = await this.retrieveAccessToken(base64EncodedClientIdAndSecret, body);
+		const res = await this.retrieveAccessToken(
+			Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
+			body
+		);
 
 		if (res.status !== 200) {
 			throw new Error('Invalid credentials');
@@ -124,11 +130,11 @@ class Jsrwrap {
 		redirectUri: string,
 		code: string
 	): Promise<Jsrwrap> {
-		const clientIdAndSecret = Buffer.from(`${clientId}:${clientSecret}`);
-		const base64EncodedClientIdAndSecret = clientIdAndSecret.toString('base64');
-
 		const body = `grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}`;
-		const res = await this.retrieveAccessToken(base64EncodedClientIdAndSecret, body);
+		const res = await this.retrieveAccessToken(
+			Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
+			body
+		);
 
 		if (res.status !== 200) {
 			if (res.status === 401) {
@@ -159,9 +165,6 @@ class Jsrwrap {
 		grantType: 'client_credentials' | 'https://oauth.reddit.com/grants/installed_client',
 		deviceId?: string
 	) {
-		const clientIdAndSecret = Buffer.from(`${clientId}:${clientSecret}`);
-		const base64EncodedClientIdAndSecret = clientIdAndSecret.toString('base64');
-
 		let body = `grant_type=${grantType}`;
 
 		if (grantType === 'https://oauth.reddit.com/grants/installed_client') {
@@ -171,7 +174,10 @@ class Jsrwrap {
 			body = `${body}&device_id=${deviceId}`;
 		}
 
-		const res = await this.retrieveAccessToken(base64EncodedClientIdAndSecret, body);
+		const res = await this.retrieveAccessToken(
+			Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
+			body
+		);
 
 		if (res.status !== 200) {
 			throw new Error('Invalid credentials');

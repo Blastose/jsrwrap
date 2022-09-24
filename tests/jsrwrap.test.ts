@@ -15,6 +15,12 @@ describe('Jsrwrap static methods', () => {
 			'https://www.reddit.com/api/v1/authorize?client_id=T_OJ428Xl6SYT52iyI8VKA&response_type=code&state=state_123&redirect_uri=http://localhost:5173&duration=permanent&scope=read%20edit%20history'
 		);
 	});
+
+	it('should encode the clientId and clientSecret', () => {
+		expect(Jsrwrap.encodeClientIdAndSecret('6779ef20e75817b79602', 'asekldjlmascnekjnn_3jdk')).toBe(
+			'Njc3OWVmMjBlNzU4MTdiNzk2MDI6YXNla2xkamxtYXNjbmVram5uXzNqZGs='
+		);
+	});
 });
 
 describe('Jsrwrap token retrieval', () => {
