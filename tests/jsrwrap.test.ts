@@ -30,6 +30,17 @@ describe('Jsrwrap token retrieval', () => {
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
 
+	test('reddit returns an error when authenticating with invalid code', async () => {
+		await expect(
+			Jsrwrap.fromAuthCode(
+				process.env.CLIENT_ID!,
+				process.env.CLIENT_SECRET!,
+				'http://localhost:5173',
+				'flAqmMMLowCKKagZLMRR72yJcs7rrg'
+			)
+		).rejects.toThrow(Error);
+	});
+
 	test('reddit returns a JSON with an access token when authenticating with username and password for a script app', async () => {
 		const reddit = await Jsrwrap.fromUsernamePassword(
 			process.env.SCRIPT_CLIENT_ID!,

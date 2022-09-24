@@ -107,12 +107,21 @@ class Jsrwrap {
 		});
 
 		if (res.status !== 200) {
-			throw new Error('Invalid credentials');
+			if (res.status === 401) {
+				throw new Error('Invalid clientId and clientSecret');
+			}
+			if (res.status === 400) {
+				throw new Error('code is invalid');
+			}
+			throw new Error();
 		}
 
-		const resJson = (await res.json()) as accessTokenJsonResponse;
+		const resJson = (await res.json()) as any;
+		if ('error' in resJson || 'message' in resJson) {
+			throw new Error(`${resJson['message']}`);
+		}
 
-		return new Jsrwrap(resJson.access_token);
+		return new Jsrwrap((resJson as accessTokenJsonResponse).access_token);
 	}
 
 	static async fromApplicationOnlyAuth(
