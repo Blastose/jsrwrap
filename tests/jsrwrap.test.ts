@@ -69,4 +69,14 @@ describe('Jsrwrap token retrieval', () => {
 		);
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
+
+	it('refreshes the access token for non-application only OAuth', async () => {
+		const reddit = new Jsrwrap(
+			process.env.ACCESS_TOKEN!,
+			process.env.CLIENT_ID!,
+			process.env.CLIENT_SECRET!,
+			process.env.REFRESH_TOKEN!
+		);
+		await expect(reddit.refreshAccessToken()).resolves.not.toThrow(Error);
+	});
 });

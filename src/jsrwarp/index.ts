@@ -43,10 +43,33 @@ type OAuthConfig = {
 };
 
 class Jsrwrap {
+	clientId: string;
+	clientSecret: string;
 	accessToken: string;
+	refreshToken?: string;
 
-	constructor(accessToken: string) {
+	constructor(accessToken: string, clientId: string, clientSecret: string, refreshToken?: string) {
 		this.accessToken = accessToken;
+		this.clientId = clientId;
+		this.clientSecret = clientSecret;
+		this.refreshToken = refreshToken;
+	}
+
+	async refreshAccessToken() {
+		if (this.refreshToken) {
+			const clientIdAndSecret = Buffer.from(`${this.clientId}:${this.clientSecret}`);
+			const base64EncodedClientIdAndSecret = clientIdAndSecret.toString('base64');
+			const body = `grant_type=refresh_token&refresh_token=${this.refreshToken}`;
+			const res = await Jsrwrap.retrieveAccessToken(base64EncodedClientIdAndSecret, body);
+
+			if (res.status !== 200) {
+				throw new Error('Invalid refresh_token');
+			}
+
+			this.accessToken = ((await res.json()) as accessTokenJsonResponse).access_token;
+		} else {
+			throw new Error('No refresh_token; cannot refresh access token');
+		}
 	}
 
 	static async retrieveAccessToken(httpBasicAuth: string, body: string) {
@@ -80,7 +103,7 @@ class Jsrwrap {
 
 		const resJson = (await res.json()) as accessTokenJsonResponse;
 
-		return new Jsrwrap(resJson.access_token);
+		return new Jsrwrap(resJson.access_token, clientId, clientSecret);
 	}
 
 	static createAuthUrl(
@@ -122,7 +145,12 @@ class Jsrwrap {
 			throw new Error(`${resJson['message']}`);
 		}
 
-		return new Jsrwrap((resJson as accessTokenJsonResponse).access_token);
+		return new Jsrwrap(
+			(resJson as accessTokenJsonResponse).access_token,
+			clientId,
+			clientSecret,
+			(resJson as accessTokenJsonResponse).refresh_token
+		);
 	}
 
 	static async fromApplicationOnlyAuth(
@@ -151,7 +179,7 @@ class Jsrwrap {
 
 		const resJson = (await res.json()) as accessTokenJsonResponse;
 		console.log(resJson);
-		return new Jsrwrap(resJson.access_token);
+		return new Jsrwrap(resJson.access_token, clientId, clientSecret);
 	}
 }
 
