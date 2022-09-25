@@ -27,23 +27,23 @@ describe('Jsrwrap token retrieval', () => {
 	// Code is one-time use so repeated calls to this test should fail
 	// You can get a code from the above link and extracting the code from the query param
 	test.skip('reddit returns a JSON with an access token when authenticating with code', async () => {
-		const reddit = await Jsrwrap.fromAuthCode(
-			process.env.CLIENT_ID!,
-			process.env.CLIENT_SECRET!,
-			'http://localhost:5173',
-			'flAqmMMLowCKKagZLMRR72yJcs7rrg'
-		);
+		const reddit = await Jsrwrap.fromAuthCode({
+			clientId: process.env.CLIENT_ID!,
+			clientSecret: process.env.CLIENT_SECRET!,
+			redirectUri: 'http://localhost:5173',
+			code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg'
+		});
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
 
 	test('reddit returns an error when authenticating with invalid code', async () => {
 		await expect(
-			Jsrwrap.fromAuthCode(
-				process.env.CLIENT_ID!,
-				process.env.CLIENT_SECRET!,
-				'http://localhost:5173',
-				'flAqmMMLowCKKagZLMRR72yJcs7rrg'
-			)
+			Jsrwrap.fromAuthCode({
+				clientId: process.env.CLIENT_ID!,
+				clientSecret: process.env.CLIENT_SECRET!,
+				redirectUri: 'http://localhost:5173',
+				code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg'
+			})
 		).rejects.toThrow(Error);
 	});
 

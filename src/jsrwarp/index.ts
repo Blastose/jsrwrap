@@ -126,12 +126,13 @@ class Jsrwrap {
 		return `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${redirectUri}&duration=${duration}&scope=${scopes}`;
 	}
 
-	static async fromAuthCode(
-		clientId: string,
-		clientSecret: string,
-		redirectUri: string,
-		code: string
-	): Promise<Jsrwrap> {
+	static async fromAuthCode(options: {
+		clientId: string;
+		clientSecret: string;
+		redirectUri: string;
+		code: string;
+	}): Promise<Jsrwrap> {
+		const { clientId, clientSecret, redirectUri, code } = options;
 		const body = `grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}`;
 		const res = await this.retrieveAccessToken({
 			httpBasicAuth: Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
