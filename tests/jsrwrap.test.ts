@@ -58,21 +58,21 @@ describe('Jsrwrap token retrieval', () => {
 	});
 
 	test('reddit returns a JSON with an access token when authenticating with application only OAuth and client_credentials', async () => {
-		const reddit = await Jsrwrap.fromApplicationOnlyAuth(
-			process.env.CLIENT_ID!,
-			process.env.CLIENT_SECRET!,
-			'client_credentials'
-		);
+		const reddit = await Jsrwrap.fromApplicationOnlyAuth({
+			clientId: process.env.CLIENT_ID!,
+			clientSecret: process.env.CLIENT_SECRET!,
+			grantType: 'client_credentials'
+		});
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
 
 	test('reddit returns a JSON with an access token when authenticating with application only OAuth and installed_client', async () => {
-		const reddit = await Jsrwrap.fromApplicationOnlyAuth(
-			process.env.CLIENT_ID!,
-			process.env.CLIENT_SECRET!,
-			'https://oauth.reddit.com/grants/installed_client',
-			'bxkbocifqjjxjbdamkfq'
-		);
+		const reddit = await Jsrwrap.fromApplicationOnlyAuth({
+			clientId: process.env.CLIENT_ID!,
+			clientSecret: process.env.CLIENT_SECRET!,
+			grantType: 'https://oauth.reddit.com/grants/installed_client',
+			deviceId: 'bxkbocifqjjxjbdamkfq'
+		});
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
 

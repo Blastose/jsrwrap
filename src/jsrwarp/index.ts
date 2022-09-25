@@ -162,12 +162,13 @@ class Jsrwrap {
 		);
 	}
 
-	static async fromApplicationOnlyAuth(
-		clientId: string,
-		clientSecret: string,
-		grantType: 'client_credentials' | 'https://oauth.reddit.com/grants/installed_client',
-		deviceId?: string
-	) {
+	static async fromApplicationOnlyAuth(options: {
+		clientId: string;
+		clientSecret: string;
+		grantType: 'client_credentials' | 'https://oauth.reddit.com/grants/installed_client';
+		deviceId?: string;
+	}) {
+		const { clientId, clientSecret, grantType, deviceId } = options;
 		let body = `grant_type=${grantType}`;
 
 		if (grantType === 'https://oauth.reddit.com/grants/installed_client') {
