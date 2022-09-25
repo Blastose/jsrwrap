@@ -58,10 +58,10 @@ class Jsrwrap {
 	async refreshAccessToken() {
 		if (this.refreshToken) {
 			const body = `grant_type=refresh_token&refresh_token=${this.refreshToken}`;
-			const res = await Jsrwrap.retrieveAccessToken(
-				Jsrwrap.encodeClientIdAndSecret(this.clientId, this.clientSecret),
+			const res = await Jsrwrap.retrieveAccessToken({
+				httpBasicAuth: Jsrwrap.encodeClientIdAndSecret(this.clientId, this.clientSecret),
 				body
-			);
+			});
 
 			if (res.status !== 200) {
 				throw new Error('Invalid refresh_token');
@@ -78,30 +78,31 @@ class Jsrwrap {
 		return clientIdAndSecret.toString('base64');
 	}
 
-	static async retrieveAccessToken(httpBasicAuth: string, body: string) {
+	static async retrieveAccessToken(options: { httpBasicAuth: string; body: string }) {
 		const res = fetch('https://www.reddit.com/api/v1/access_token', {
 			method: 'POST',
 			headers: {
-				Authorization: `Basic ${httpBasicAuth}`,
+				Authorization: `Basic ${options.httpBasicAuth}`,
 				'Content-Type': 'application/x-www-form-urlencoded'
 			},
-			body: body
+			body: options.body
 		});
 
 		return res;
 	}
 
-	static async fromUsernamePassword(
-		clientId: string,
-		clientSecret: string,
-		username: string,
-		password: string
-	) {
+	static async fromUsernamePassword(options: {
+		clientId: string;
+		clientSecret: string;
+		username: string;
+		password: string;
+	}) {
+		const { clientId, clientSecret, username, password } = options;
 		const body = `grant_type=password&username=${username}&password=${password}`;
-		const res = await this.retrieveAccessToken(
-			Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
+		const res = await this.retrieveAccessToken({
+			httpBasicAuth: Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
 			body
-		);
+		});
 
 		if (res.status !== 200) {
 			throw new Error('Invalid credentials');
@@ -112,29 +113,31 @@ class Jsrwrap {
 		return new Jsrwrap(resJson.access_token, clientId, clientSecret);
 	}
 
-	static createAuthUrl(
-		clientId: string,
-		state: string,
-		redirectUri: string,
-		duration: 'temporary' | 'permanent',
-		scope: Scope[]
-	): string {
+	static createAuthUrl(options: {
+		clientId: string;
+		state: string;
+		redirectUri: string;
+		duration: 'temporary' | 'permanent';
+		scope: Scope[];
+	}): string {
+		const { clientId, state, redirectUri, duration, scope } = options;
 		let scopes = scope.join(' ');
 		scopes = encodeURIComponent(scopes);
 		return `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${redirectUri}&duration=${duration}&scope=${scopes}`;
 	}
 
-	static async fromAuthCode(
-		clientId: string,
-		clientSecret: string,
-		redirectUri: string,
-		code: string
-	): Promise<Jsrwrap> {
+	static async fromAuthCode(options: {
+		clientId: string;
+		clientSecret: string;
+		redirectUri: string;
+		code: string;
+	}): Promise<Jsrwrap> {
+		const { clientId, clientSecret, redirectUri, code } = options;
 		const body = `grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}`;
-		const res = await this.retrieveAccessToken(
-			Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
+		const res = await this.retrieveAccessToken({
+			httpBasicAuth: Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
 			body
-		);
+		});
 
 		if (res.status !== 200) {
 			if (res.status === 401) {
@@ -159,12 +162,13 @@ class Jsrwrap {
 		);
 	}
 
-	static async fromApplicationOnlyAuth(
-		clientId: string,
-		clientSecret: string,
-		grantType: 'client_credentials' | 'https://oauth.reddit.com/grants/installed_client',
-		deviceId?: string
-	) {
+	static async fromApplicationOnlyAuth(options: {
+		clientId: string;
+		clientSecret: string;
+		grantType: 'client_credentials' | 'https://oauth.reddit.com/grants/installed_client';
+		deviceId?: string;
+	}) {
+		const { clientId, clientSecret, grantType, deviceId } = options;
 		let body = `grant_type=${grantType}`;
 
 		if (grantType === 'https://oauth.reddit.com/grants/installed_client') {
@@ -174,10 +178,10 @@ class Jsrwrap {
 			body = `${body}&device_id=${deviceId}`;
 		}
 
-		const res = await this.retrieveAccessToken(
-			Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
+		const res = await this.retrieveAccessToken({
+			httpBasicAuth: Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
 			body
-		);
+		});
 
 		if (res.status !== 200) {
 			throw new Error('Invalid credentials');
