@@ -113,13 +113,14 @@ class Jsrwrap {
 		return new Jsrwrap(resJson.access_token, clientId, clientSecret);
 	}
 
-	static createAuthUrl(
-		clientId: string,
-		state: string,
-		redirectUri: string,
-		duration: 'temporary' | 'permanent',
-		scope: Scope[]
-	): string {
+	static createAuthUrl(options: {
+		clientId: string;
+		state: string;
+		redirectUri: string;
+		duration: 'temporary' | 'permanent';
+		scope: Scope[];
+	}): string {
+		const { clientId, state, redirectUri, duration, scope } = options;
 		let scopes = scope.join(' ');
 		scopes = encodeURIComponent(scopes);
 		return `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${redirectUri}&duration=${duration}&scope=${scopes}`;

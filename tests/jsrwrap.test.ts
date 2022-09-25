@@ -4,13 +4,13 @@ import { Jsrwrap } from '../src/jsrwarp/index';
 describe('Jsrwrap static methods', () => {
 	it('should generate a valid authorization URL', () => {
 		expect(
-			Jsrwrap.createAuthUrl(
-				'T_OJ428Xl6SYT52iyI8VKA',
-				'state_123',
-				'http://localhost:5173',
-				'permanent',
-				['read', 'edit', 'history']
-			)
+			Jsrwrap.createAuthUrl({
+				clientId: 'T_OJ428Xl6SYT52iyI8VKA',
+				state: 'state_123',
+				redirectUri: 'http://localhost:5173',
+				duration: 'permanent',
+				scope: ['read', 'edit', 'history']
+			})
 		).toBe(
 			'https://www.reddit.com/api/v1/authorize?client_id=T_OJ428Xl6SYT52iyI8VKA&response_type=code&state=state_123&redirect_uri=http://localhost:5173&duration=permanent&scope=read%20edit%20history'
 		);
