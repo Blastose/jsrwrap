@@ -48,12 +48,12 @@ describe('Jsrwrap token retrieval', () => {
 	});
 
 	test('reddit returns a JSON with an access token when authenticating with username and password for a script app', async () => {
-		const reddit = await Jsrwrap.fromUsernamePassword(
-			process.env.SCRIPT_CLIENT_ID!,
-			process.env.SCRIPT_CLIENT_SECRET!,
-			process.env.USERNAME!,
-			process.env.PASSWORD!
-		);
+		const reddit = await Jsrwrap.fromUsernamePassword({
+			clientId: process.env.SCRIPT_CLIENT_ID!,
+			clientSecret: process.env.SCRIPT_CLIENT_SECRET!,
+			username: process.env.USERNAME!,
+			password: process.env.PASSWORD!
+		});
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
 

@@ -91,12 +91,13 @@ class Jsrwrap {
 		return res;
 	}
 
-	static async fromUsernamePassword(
-		clientId: string,
-		clientSecret: string,
-		username: string,
-		password: string
-	) {
+	static async fromUsernamePassword(options: {
+		clientId: string;
+		clientSecret: string;
+		username: string;
+		password: string;
+	}) {
+		const { clientId, clientSecret, username, password } = options;
 		const body = `grant_type=password&username=${username}&password=${password}`;
 		const res = await this.retrieveAccessToken({
 			httpBasicAuth: Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
