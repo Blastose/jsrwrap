@@ -30,19 +30,6 @@ type accessTokenJsonResponse = {
 	refresh_token?: string;
 };
 
-type OAuthConfig = {
-	clientId: string;
-	clientSecret: string;
-	state: string;
-	responseType: 'code' | 'token';
-	redirectUri: string | null;
-	duration: 'temporary' | 'permanent';
-	scope: Scope[];
-	grantType: 'authorization_code' | 'refresh_token';
-	accessToken: string;
-	refreshToken: string;
-};
-
 class Jsrwrap {
 	clientId: string;
 	clientSecret: string;
