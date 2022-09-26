@@ -37,7 +37,31 @@ describe('Jsrwrap token retrieval', () => {
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
 
-	test('reddit returns an error when authenticating with invalid code', async () => {
+	// Code needs to be valid for this test to pass, since Reddit api checks for a valid redirect_uri after it checks the code
+	// You can get a code from the above link and extracting the code from the query param
+	it.skip('should throw an error when redirectUri does not match when authenticating with code', async () => {
+		await expect(
+			Jsrwrap.fromAuthCode({
+				clientId: process.env.CLIENT_ID!,
+				clientSecret: process.env.CLIENT_SECRET!,
+				redirectUri: 'http://notlocalhost:1234',
+				code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg'
+			})
+		).rejects.toThrow('redirectUri does not match the one registered to your app');
+	});
+
+	it('should throw an error when clientId or clientSecret is invalid when authenticating with code', async () => {
+		await expect(
+			Jsrwrap.fromAuthCode({
+				clientId: 'notvalidclientid',
+				clientSecret: process.env.CLIENT_SECRET!,
+				redirectUri: 'http://localhost:5173',
+				code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg'
+			})
+		).rejects.toThrow('Invalid clientId or clientSecret');
+	});
+
+	it('should throw an error when authenticating with invalid code', async () => {
 		await expect(
 			Jsrwrap.fromAuthCode({
 				clientId: process.env.CLIENT_ID!,
@@ -45,7 +69,7 @@ describe('Jsrwrap token retrieval', () => {
 				redirectUri: 'http://localhost:5173',
 				code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg'
 			})
-		).rejects.toThrow(Error);
+		).rejects.toThrow('The code is expired or has already been used');
 	});
 
 	test('reddit returns a JSON with an access token when authenticating with username and password for a script app', async () => {

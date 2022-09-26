@@ -143,25 +143,20 @@ class Jsrwrap {
 
 		if (res.status !== 200) {
 			if (res.status === 401) {
-				throw new Error('Invalid clientId and clientSecret');
+				throw new OAuthError('Invalid clientId or clientSecret');
 			}
-			if (res.status === 400) {
-				throw new Error('code is invalid');
+			if (res.status === 500) {
+				throw new OAuthError('redirectUri does not match the one registered to your app');
 			}
-			throw new Error();
+			if (res.status === 404) {
+				throw new OAuthError('The code is expired or has already been used');
+			}
+			throw new OAuthError('An error has occured during the authentication process');
 		}
 
-		const resJson = (await res.json()) as any;
-		if ('error' in resJson || 'message' in resJson) {
-			throw new Error(`${resJson['message']}`);
-		}
+		const resJson = (await res.json()) as accessTokenJsonResponse;
 
-		return new Jsrwrap(
-			(resJson as accessTokenJsonResponse).access_token,
-			clientId,
-			clientSecret,
-			(resJson as accessTokenJsonResponse).refresh_token
-		);
+		return new Jsrwrap(resJson.access_token, clientId, clientSecret, resJson.refresh_token);
 	}
 
 	/**
@@ -209,7 +204,7 @@ class Jsrwrap {
 		}
 
 		const resJson = (await res.json()) as accessTokenJsonResponse;
-		// console.log(resJson);
+
 		return new Jsrwrap(resJson.access_token, clientId, clientSecret);
 	}
 }
