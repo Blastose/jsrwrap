@@ -119,7 +119,17 @@ describe('Jsrwrap token retrieval', () => {
 				grantType: 'https://oauth.reddit.com/grants/installed_client',
 				deviceId: 'bxkbocifqjjxjbdamkfq'
 			})
-		).rejects.toThrow(OAuthError);
+		).rejects.toThrow('Invalid clientId or clientSecret');
+	});
+
+	it('should throw an error when deviceId is not given for application only OAuth and installed_client', async () => {
+		await expect(
+			Jsrwrap.fromApplicationOnlyAuth({
+				clientId: process.env.CLIENT_ID!,
+				clientSecret: process.env.CLIENT_SECRET!,
+				grantType: 'https://oauth.reddit.com/grants/installed_client'
+			})
+		).rejects.toThrow('deviceId is required when using the installed_client grant');
 	});
 
 	it('should throw an error when deviceId is less than 20 characters for application only OAuth and installed_client', async () => {
@@ -130,7 +140,7 @@ describe('Jsrwrap token retrieval', () => {
 				grantType: 'https://oauth.reddit.com/grants/installed_client',
 				deviceId: 'sadjfkj'
 			})
-		).rejects.toThrow(OAuthError);
+		).rejects.toThrow('deviceId must be between 20-30 characters');
 	});
 
 	it('should throw an error when deviceId is greater than 30 characters for application only OAuth and installed_client', async () => {
@@ -141,7 +151,7 @@ describe('Jsrwrap token retrieval', () => {
 				grantType: 'https://oauth.reddit.com/grants/installed_client',
 				deviceId: 'sadjfkjasledjleksjadlkjseidjalskedjkasjkdjsdejdkjkdkjslj'
 			})
-		).rejects.toThrow(OAuthError);
+		).rejects.toThrow('deviceId must be between 20-30 characters');
 	});
 
 	it('refreshes the access token for non-application only OAuth', async () => {
