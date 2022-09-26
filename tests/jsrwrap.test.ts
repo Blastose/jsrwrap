@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Jsrwrap } from '../src/jsrwarp/index';
+import OAuthError from '../src/jsrwarp/oauthError';
 
 describe('Jsrwrap static methods', () => {
 	it('should generate a valid authorization URL', () => {
@@ -66,6 +67,16 @@ describe('Jsrwrap token retrieval', () => {
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
 
+	it('should throw an error when clientId or clientSecret is invalid for application only OAuth and client_credentials', async () => {
+		await expect(
+			Jsrwrap.fromApplicationOnlyAuth({
+				clientId: 'jajsleij3kjkajds',
+				clientSecret: process.env.CLIENT_SECRET!,
+				grantType: 'https://oauth.reddit.com/grants/installed_client'
+			})
+		).rejects.toThrow(OAuthError);
+	});
+
 	test('reddit returns a JSON with an access token when authenticating with application only OAuth and installed_client', async () => {
 		const reddit = await Jsrwrap.fromApplicationOnlyAuth({
 			clientId: process.env.CLIENT_ID!,
@@ -74,6 +85,39 @@ describe('Jsrwrap token retrieval', () => {
 			deviceId: 'bxkbocifqjjxjbdamkfq'
 		});
 		expect(reddit).toBeInstanceOf(Jsrwrap);
+	});
+
+	it('should throw an error when clientId or clientSecret is invalid for application only OAuth and installed_client', async () => {
+		await expect(
+			Jsrwrap.fromApplicationOnlyAuth({
+				clientId: 'jajsleij3kjkajds',
+				clientSecret: process.env.CLIENT_SECRET!,
+				grantType: 'https://oauth.reddit.com/grants/installed_client',
+				deviceId: 'bxkbocifqjjxjbdamkfq'
+			})
+		).rejects.toThrow(OAuthError);
+	});
+
+	it('should throw an error when deviceId is less than 20 characters for application only OAuth and installed_client', async () => {
+		await expect(
+			Jsrwrap.fromApplicationOnlyAuth({
+				clientId: process.env.CLIENT_ID!,
+				clientSecret: process.env.CLIENT_SECRET!,
+				grantType: 'https://oauth.reddit.com/grants/installed_client',
+				deviceId: 'sadjfkj'
+			})
+		).rejects.toThrow(OAuthError);
+	});
+
+	it('should throw an error when deviceId is greater than 30 characters for application only OAuth and installed_client', async () => {
+		await expect(
+			Jsrwrap.fromApplicationOnlyAuth({
+				clientId: process.env.CLIENT_ID!,
+				clientSecret: process.env.CLIENT_SECRET!,
+				grantType: 'https://oauth.reddit.com/grants/installed_client',
+				deviceId: 'sadjfkjasledjleksjadlkjseidjalskedjkasjkdjsdejdkjkdkjslj'
+			})
+		).rejects.toThrow(OAuthError);
 	});
 
 	it('refreshes the access token for non-application only OAuth', async () => {

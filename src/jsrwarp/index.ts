@@ -190,7 +190,8 @@ class Jsrwrap {
 		});
 
 		if (res.status !== 200) {
-			throw new OAuthError('Invalid credentials');
+			// Reddit returns a 401 response when Authorization value is not valid
+			throw new OAuthError('Invalid clientId or clientSecret');
 		}
 
 		const resJson = (await res.json()) as accessTokenJsonResponse;
