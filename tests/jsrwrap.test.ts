@@ -82,6 +82,41 @@ describe('Jsrwrap token retrieval', () => {
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
 
+	it('should throw an error when clientId or clientSecret is invalid when authenticating with username and password for a script app', async () => {
+		await expect(
+			Jsrwrap.fromUsernamePassword({
+				clientId: 'notvalidclientid',
+				clientSecret: process.env.SCRIPT_CLIENT_SECRET!,
+				username: process.env.USERNAME!,
+				password: process.env.PASSWORD!
+			})
+		).rejects.toThrow('Invalid clientId or clientSecret');
+	});
+
+	it('should throw an error when authenticating with username and password for a non-script app', async () => {
+		await expect(
+			Jsrwrap.fromUsernamePassword({
+				clientId: process.env.CLIENT_ID!,
+				clientSecret: process.env.CLIENT_SECRET!,
+				username: process.env.USERNAME!,
+				password: process.env.PASSWORD!
+			})
+		).rejects.toThrow('Only script apps may use password auth');
+	});
+
+	it('should throw an error when authenticating with incorrect username and password for a script app', async () => {
+		await expect(
+			Jsrwrap.fromUsernamePassword({
+				clientId: process.env.SCRIPT_CLIENT_ID!,
+				clientSecret: process.env.SCRIPT_CLIENT_SECRET!,
+				username: 'fakeusernamehere',
+				password: 'fakepasswordhere'
+			})
+		).rejects.toThrow(
+			'Username or password does not match the account used to register the app with the given clientId and clientSecret'
+		);
+	});
+
 	test('reddit returns a JSON with an access token when authenticating with application only OAuth and client_credentials', async () => {
 		const reddit = await Jsrwrap.fromApplicationOnlyAuth({
 			clientId: process.env.CLIENT_ID!,

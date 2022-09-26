@@ -121,10 +121,19 @@ class Jsrwrap {
 		});
 
 		if (res.status !== 200) {
-			throw new Error('Invalid credentials');
+			throw new OAuthError('Invalid clientId or clientSecret');
 		}
 
-		const resJson = (await res.json()) as accessTokenJsonResponse;
+		const resJson = (await res.json()) as any;
+		if (resJson.error) {
+			if (resJson.error_description === 'Only script apps may use password auth') {
+				throw new OAuthError(resJson.error_description);
+			}
+
+			throw new OAuthError(
+				'Username or password does not match the account used to register the app with the given clientId and clientSecret'
+			);
+		}
 
 		return new Jsrwrap(resJson.access_token, clientId, clientSecret);
 	}
