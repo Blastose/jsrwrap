@@ -1,7 +1,7 @@
 {
 	"name": "jsrwrap",
-	"version": "1.0.0",
-	"description": "",
+	"version": "0.0.1",
+	"description": "A WIP api wrapper for Reddit",
 	"exports": "./index.js",
 	"engines": {
 		"node": ">=14.16"
