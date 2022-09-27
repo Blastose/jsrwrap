@@ -32,7 +32,8 @@ describe('Jsrwrap token retrieval', () => {
 			clientId: process.env.CLIENT_ID!,
 			clientSecret: process.env.CLIENT_SECRET!,
 			redirectUri: 'http://localhost:5173',
-			code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg'
+			code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg',
+			userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 		});
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
@@ -45,7 +46,8 @@ describe('Jsrwrap token retrieval', () => {
 				clientId: process.env.CLIENT_ID!,
 				clientSecret: process.env.CLIENT_SECRET!,
 				redirectUri: 'http://notlocalhost:1234',
-				code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg'
+				code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg',
+				userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 			})
 		).rejects.toThrow('redirectUri does not match the one registered to your app');
 	});
@@ -56,7 +58,8 @@ describe('Jsrwrap token retrieval', () => {
 				clientId: 'notvalidclientid',
 				clientSecret: process.env.CLIENT_SECRET!,
 				redirectUri: 'http://localhost:5173',
-				code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg'
+				code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg',
+				userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 			})
 		).rejects.toThrow('Invalid clientId or clientSecret');
 	});
@@ -67,7 +70,8 @@ describe('Jsrwrap token retrieval', () => {
 				clientId: process.env.CLIENT_ID!,
 				clientSecret: process.env.CLIENT_SECRET!,
 				redirectUri: 'http://localhost:5173',
-				code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg'
+				code: 'flAqmMMLowCKKagZLMRR72yJcs7rrg',
+				userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 			})
 		).rejects.toThrow('The code is expired or has already been used');
 	});
@@ -77,7 +81,8 @@ describe('Jsrwrap token retrieval', () => {
 			clientId: process.env.SCRIPT_CLIENT_ID!,
 			clientSecret: process.env.SCRIPT_CLIENT_SECRET!,
 			username: process.env.USERNAME!,
-			password: process.env.PASSWORD!
+			password: process.env.PASSWORD!,
+			userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 		});
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
@@ -88,7 +93,8 @@ describe('Jsrwrap token retrieval', () => {
 				clientId: 'notvalidclientid',
 				clientSecret: process.env.SCRIPT_CLIENT_SECRET!,
 				username: process.env.USERNAME!,
-				password: process.env.PASSWORD!
+				password: process.env.PASSWORD!,
+				userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 			})
 		).rejects.toThrow('Invalid clientId or clientSecret');
 	});
@@ -99,7 +105,8 @@ describe('Jsrwrap token retrieval', () => {
 				clientId: process.env.CLIENT_ID!,
 				clientSecret: process.env.CLIENT_SECRET!,
 				username: process.env.USERNAME!,
-				password: process.env.PASSWORD!
+				password: process.env.PASSWORD!,
+				userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 			})
 		).rejects.toThrow('Only script apps may use password auth');
 	});
@@ -110,7 +117,8 @@ describe('Jsrwrap token retrieval', () => {
 				clientId: process.env.SCRIPT_CLIENT_ID!,
 				clientSecret: process.env.SCRIPT_CLIENT_SECRET!,
 				username: 'fakeusernamehere',
-				password: 'fakepasswordhere'
+				password: 'fakepasswordhere',
+				userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 			})
 		).rejects.toThrow(
 			'Username or password does not match the account used to register the app with the given clientId and clientSecret'
@@ -121,7 +129,8 @@ describe('Jsrwrap token retrieval', () => {
 		const reddit = await Jsrwrap.fromApplicationOnlyAuth({
 			clientId: process.env.CLIENT_ID!,
 			clientSecret: process.env.CLIENT_SECRET!,
-			grantType: 'client_credentials'
+			grantType: 'client_credentials',
+			userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 		});
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
@@ -131,7 +140,8 @@ describe('Jsrwrap token retrieval', () => {
 			Jsrwrap.fromApplicationOnlyAuth({
 				clientId: 'jajsleij3kjkajds',
 				clientSecret: process.env.CLIENT_SECRET!,
-				grantType: 'https://oauth.reddit.com/grants/installed_client'
+				grantType: 'https://oauth.reddit.com/grants/installed_client',
+				userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 			})
 		).rejects.toThrow(OAuthError);
 	});
@@ -141,7 +151,8 @@ describe('Jsrwrap token retrieval', () => {
 			clientId: process.env.CLIENT_ID!,
 			clientSecret: process.env.CLIENT_SECRET!,
 			grantType: 'https://oauth.reddit.com/grants/installed_client',
-			deviceId: 'bxkbocifqjjxjbdamkfq'
+			deviceId: 'bxkbocifqjjxjbdamkfq',
+			userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 		});
 		expect(reddit).toBeInstanceOf(Jsrwrap);
 	});
@@ -152,7 +163,8 @@ describe('Jsrwrap token retrieval', () => {
 				clientId: 'jajsleij3kjkajds',
 				clientSecret: process.env.CLIENT_SECRET!,
 				grantType: 'https://oauth.reddit.com/grants/installed_client',
-				deviceId: 'bxkbocifqjjxjbdamkfq'
+				deviceId: 'bxkbocifqjjxjbdamkfq',
+				userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 			})
 		).rejects.toThrow('Invalid clientId or clientSecret');
 	});
@@ -162,7 +174,8 @@ describe('Jsrwrap token retrieval', () => {
 			Jsrwrap.fromApplicationOnlyAuth({
 				clientId: process.env.CLIENT_ID!,
 				clientSecret: process.env.CLIENT_SECRET!,
-				grantType: 'https://oauth.reddit.com/grants/installed_client'
+				grantType: 'https://oauth.reddit.com/grants/installed_client',
+				userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 			})
 		).rejects.toThrow('deviceId is required when using the installed_client grant');
 	});
@@ -173,7 +186,8 @@ describe('Jsrwrap token retrieval', () => {
 				clientId: process.env.CLIENT_ID!,
 				clientSecret: process.env.CLIENT_SECRET!,
 				grantType: 'https://oauth.reddit.com/grants/installed_client',
-				deviceId: 'sadjfkj'
+				deviceId: 'sadjfkj',
+				userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 			})
 		).rejects.toThrow('deviceId must be between 20-30 characters');
 	});
@@ -184,7 +198,8 @@ describe('Jsrwrap token retrieval', () => {
 				clientId: process.env.CLIENT_ID!,
 				clientSecret: process.env.CLIENT_SECRET!,
 				grantType: 'https://oauth.reddit.com/grants/installed_client',
-				deviceId: 'sadjfkjasledjleksjadlkjseidjalskedjkasjkdjsdejdkjkdkjslj'
+				deviceId: 'sadjfkjasledjleksjadlkjseidjalskedjkasjkdjsdejdkjkdkjslj',
+				userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
 			})
 		).rejects.toThrow('deviceId must be between 20-30 characters');
 	});
@@ -194,6 +209,7 @@ describe('Jsrwrap token retrieval', () => {
 			process.env.ACCESS_TOKEN!,
 			process.env.CLIENT_ID!,
 			process.env.CLIENT_SECRET!,
+			'web:JsrwrapApiWrapper:v0.0.1',
 			process.env.REFRESH_TOKEN!
 		);
 		await expect(reddit.refreshAccessToken()).resolves.not.toThrow(Error);
