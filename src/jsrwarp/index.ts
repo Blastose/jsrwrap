@@ -20,7 +20,8 @@ type Scope =
 	| 'subscribe'
 	| 'vote'
 	| 'wikiedit'
-	| 'wikiread';
+	| 'wikiread'
+	| '*';
 
 type accessTokenJsonResponse = {
 	access_token: string;
