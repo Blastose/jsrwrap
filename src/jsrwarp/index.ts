@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { plainToClass } from 'class-transformer';
+import { plainToInstance } from 'class-transformer';
 import fetch from 'node-fetch';
 import OAuthError from './oauthError';
 import { RedditAccount } from './objects/redditAccount';
@@ -333,7 +333,7 @@ class Jsrwrap {
 
 	async getMe() {
 		const accountData = await this.get('api/v1/me');
-		const redditAccount = plainToClass(RedditAccount, accountData);
+		const redditAccount = plainToInstance(RedditAccount, accountData);
 		redditAccount.setJsrwrap(this);
 
 		return redditAccount;
