@@ -1,5 +1,8 @@
+import 'reflect-metadata';
+import { plainToClass } from 'class-transformer';
 import fetch from 'node-fetch';
 import OAuthError from './oauthError';
+import { RedditAccount } from './objects/redditAccount';
 
 type Scope =
 	| 'identity'
@@ -295,16 +298,35 @@ class Jsrwrap {
 		return new Jsrwrap(resJson.access_token, clientId, clientSecret, userAgent);
 	}
 
-	async getSubreddit(subreddit: string) {
-		const res = await fetch(`https://oauth.reddit.com/r/${subreddit}`, {
+	async get(uri: string, params?: string) {
+		const res = await fetch(`https://oauth.reddit.com/${uri}?${params}`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${this.accessToken}`,
 				'User-Agent': this.userAgent
 			}
 		});
-		const jsonResponse = (await res.json()) as any;
-		console.log(jsonResponse.data.children[0].data.selftext);
+
+		if (res.status !== 200) {
+			throw new Error('');
+		}
+
+		return await res.json();
+	}
+
+	async getMe() {
+		const accountData = await this.get('api/v1/me');
+		const redditAccount = plainToClass(RedditAccount, accountData);
+		redditAccount.setJsrwrap(this);
+
+		return redditAccount;
+	}
+
+	async getSubreddit(subreddit: string) {
+		const data = (await this.get(`r/${subreddit}`, '')) as any;
+
+		console.log(data.data.children[0].data.selftext);
+		return data.data;
 	}
 }
 
