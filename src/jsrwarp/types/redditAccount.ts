@@ -35,7 +35,7 @@ export interface Mweb {
 	experiment_id: number;
 }
 
-export interface Blocked {
+export interface User {
 	date: number;
 	rel_id: string;
 	name: string;

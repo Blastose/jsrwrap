@@ -1,5 +1,5 @@
 import { Jsrwrap } from 'jsrwarp';
-import { Features, Subreddit, Blocked, Trophy, Karma, Prefs } from '../types/redditAccount';
+import { Features, Subreddit, User, Trophy, Karma, Prefs } from '../types/redditAccount';
 import { extractData, Data } from '../utils/extractData';
 
 export class RedditAccount {
@@ -88,7 +88,7 @@ export class RedditAccount {
 
 	async getBlocked() {
 		const data = (await this._reddit.get('prefs/blocked')) as Data;
-		return data.data.children as Blocked[];
+		return data.data.children as User[];
 	}
 
 	async getTrophies() {
@@ -103,5 +103,10 @@ export class RedditAccount {
 
 	async updatePrefs(prefs: Prefs) {
 		await this._reddit.patch('api/v1/me/prefs', JSON.stringify(prefs));
+	}
+
+	async getFriends() {
+		const data = (await this._reddit.get('api/v1/me/friends')) as Data;
+		return data.data.children as User[];
 	}
 }

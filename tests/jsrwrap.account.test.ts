@@ -43,4 +43,8 @@ describe('Account methods', () => {
 		await account.updatePrefs(prefs);
 		expect((await account.getPrefs()).beta).toBe(false);
 	});
+
+	it("should get the user's friends", async () => {
+		expect((await account.getFriends())[0].date).toBe(1664478975);
+	});
 });
