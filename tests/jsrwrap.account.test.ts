@@ -10,7 +10,7 @@ beforeAll(async () => {
 		process.env.CLIENT_ID!,
 		process.env.CLIENT_SECRET!,
 		'web:JsrwrapApiWrapper:v0.0.1',
-		'39764797-HuWESUbzBmpTcCtKpGVIGtenME2Vbg'
+		process.env.REFRESH_TOKEN!
 	);
 	await reddit.refreshAccessToken();
 	account = await reddit.getMe();
