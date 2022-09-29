@@ -100,4 +100,8 @@ export class RedditAccount {
 		const data = (await this._reddit.get('api/v1/me/prefs')) as Prefs;
 		return data;
 	}
+
+	async updatePrefs(prefs: Prefs) {
+		await this._reddit.patch('api/v1/me/prefs', JSON.stringify(prefs));
+	}
 }

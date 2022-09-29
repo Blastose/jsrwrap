@@ -36,4 +36,11 @@ describe('Account methods', () => {
 	it("should get the user's prefs", async () => {
 		expect((await account.getPrefs()).beta).toBe(false);
 	});
+
+	it("should update the user's prefs", async () => {
+		const prefs = await account.getPrefs();
+		prefs.beta = false;
+		await account.updatePrefs(prefs);
+		expect((await account.getPrefs()).beta).toBe(false);
+	});
 });

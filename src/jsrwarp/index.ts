@@ -314,6 +314,23 @@ class Jsrwrap {
 		return await res.json();
 	}
 
+	async patch(uri: string, data: string) {
+		const res = await fetch(`https://oauth.reddit.com/${uri}`, {
+			method: 'PATCH',
+			headers: {
+				Authorization: `Bearer ${this.accessToken}`,
+				'Content-Type': 'application/json',
+				'User-Agent': this.userAgent
+			},
+			body: data
+		});
+
+		if (res.status !== 200) {
+			throw new Error('');
+		}
+		return res.status;
+	}
+
 	async getMe() {
 		const accountData = await this.get('api/v1/me');
 		const redditAccount = plainToClass(RedditAccount, accountData);
