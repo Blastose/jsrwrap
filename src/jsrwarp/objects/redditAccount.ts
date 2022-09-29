@@ -1,5 +1,5 @@
 import { Jsrwrap } from 'jsrwarp';
-import { Features, Subreddit, Blocked, Trophy, Karma } from '../types/redditAccount';
+import { Features, Subreddit, Blocked, Trophy, Karma, Prefs } from '../types/redditAccount';
 import { extractData, Data } from '../utils/extractData';
 
 export class RedditAccount {
@@ -94,5 +94,10 @@ export class RedditAccount {
 	async getTrophies() {
 		const data = (await this._reddit.get('api/v1/me/trophies')) as Data;
 		return extractData(data.data.trophies) as Trophy[];
+	}
+
+	async getPrefs() {
+		const data = (await this._reddit.get('api/v1/me/prefs')) as Prefs;
+		return data;
 	}
 }

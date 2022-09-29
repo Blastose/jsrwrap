@@ -32,4 +32,8 @@ describe('Account methods', () => {
 	it("should get the user's karma breakdown", async () => {
 		expect((await account.getKarmaBreakdown())[0].comment_karma).toBe(15);
 	});
+
+	it("should get the user's prefs", async () => {
+		expect((await account.getPrefs()).beta).toBe(false);
+	});
 });
