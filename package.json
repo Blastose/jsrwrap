@@ -1,7 +1,7 @@
 {
 	"name": "jsrwrap",
-	"version": "1.0.0",
-	"description": "",
+	"version": "0.0.1",
+	"description": "A WIP api wrapper for Reddit",
 	"exports": "./index.js",
 	"engines": {
 		"node": ">=14.16"
@@ -29,6 +29,8 @@
 		"typescript": "^4.8.3"
 	},
 	"dependencies": {
-		"node-fetch": "^3.2.10"
+		"class-transformer": "^0.5.1",
+		"node-fetch": "^3.2.10",
+		"reflect-metadata": "^0.1.13"
 	}
 }
