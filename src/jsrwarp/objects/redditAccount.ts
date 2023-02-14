@@ -86,6 +86,7 @@ export class RedditAccount {
 		return data.data as Karma[];
 	}
 
+	// TODO: This endpoint is a listing
 	async getBlocked() {
 		const data = (await this._reddit.get('prefs/blocked')) as Data;
 		return data.data.children as User[];
@@ -105,6 +106,7 @@ export class RedditAccount {
 		await this._reddit.patch('api/v1/me/prefs', JSON.stringify(prefs));
 	}
 
+	// TODO: This endpoint is a listing
 	async getFriends() {
 		const data = (await this._reddit.get('api/v1/me/friends')) as Data;
 		return data.data.children as User[];
