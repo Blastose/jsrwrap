@@ -15,7 +15,7 @@
 		"lib/**/*"
 	],
 	"type": "module",
-	"author": "",
+	"author": "Blastose",
 	"license": "ISC",
 	"devDependencies": {
 		"@types/jest": "^29.0.3",
