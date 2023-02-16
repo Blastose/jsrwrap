@@ -20,9 +20,6 @@ describe('Subreddit methods', () => {
 	// Test may fail if a new post becomes the top of all time
 	it('should get Top submissions of all time', async () => {
 		const python = await subreddit.getSubmissions({ sort: 'top', params: { t: 'all' } });
-		python.forEach((v) => {
-			console.log(`${v.title}, by ${v.author}`);
-		});
 		expect(python[0].title).toBe(
 			`Lad wrote a Python script to download Alexa voice recordings, he didn't expect this email.`
 		);
