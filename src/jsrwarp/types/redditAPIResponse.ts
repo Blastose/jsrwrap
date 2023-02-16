@@ -14,3 +14,15 @@ export type TResponse<T> = {
 	kind: 't1' | 't2' | 't3' | 't4' | 't5' | 't6';
 	data: T;
 };
+
+export type MoreResponse = {
+	kind: 'more';
+	data: {
+		count: number;
+		name: string;
+		id: string;
+		parent_id: string;
+		depth: number;
+		children: string[];
+	};
+};
