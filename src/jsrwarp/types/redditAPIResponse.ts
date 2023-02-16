@@ -3,7 +3,7 @@ export type ListingResponse<T> = {
 	data: {
 		before: string | null;
 		after: string | null;
-		dis: number;
+		dist: number;
 		modhash: string;
 		geo_filter: string;
 		children: TResponse<T>[];
