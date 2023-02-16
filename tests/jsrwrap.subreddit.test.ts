@@ -33,7 +33,7 @@ describe('Subreddit methods', () => {
 		expect(python.length).toBe(5);
 	});
 
-	it.only('should get the subreddit about info', async () => {
+	it('should get the subreddit about info', async () => {
 		const about = await subreddit.getAbout();
 		expect(about.title).toBe('Python');
 	});
