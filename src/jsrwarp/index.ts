@@ -3,6 +3,8 @@ import { plainToInstance } from 'class-transformer';
 import fetch from 'node-fetch';
 import OAuthError from './oauthError';
 import { RedditAccount } from './objects/redditAccount';
+import { buildQueryString } from './utils/buildQueryString';
+import { Subreddit } from './objects/subreddit';
 
 type Scope =
 	| 'identity'
@@ -298,8 +300,8 @@ class Jsrwrap {
 		return new Jsrwrap(resJson.access_token, clientId, clientSecret, userAgent);
 	}
 
-	async get(uri: string, params?: string) {
-		const res = await fetch(`https://oauth.reddit.com/${uri}?${params}`, {
+	async get<T>(uri: string, params?: Record<string, unknown>) {
+		const res = await fetch(`https://oauth.reddit.com/${uri}?${buildQueryString(params)}`, {
 			method: 'GET',
 			headers: {
 				Authorization: `Bearer ${this.accessToken}`,
@@ -311,7 +313,7 @@ class Jsrwrap {
 			throw new Error('');
 		}
 
-		return await res.json();
+		return (await res.json()) as T;
 	}
 
 	async patch(uri: string, data: string) {
@@ -340,10 +342,7 @@ class Jsrwrap {
 	}
 
 	async getSubreddit(subreddit: string) {
-		const data = (await this.get(`r/${subreddit}`, '')) as any;
-
-		console.log(data.data.children[0].data.selftext);
-		return data.data;
+		return new Subreddit(this, subreddit);
 	}
 }
 
