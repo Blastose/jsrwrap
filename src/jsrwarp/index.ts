@@ -5,6 +5,7 @@ import OAuthError from './oauthError';
 import { RedditAccount } from './objects/redditAccount';
 import { buildQueryString } from './utils/buildQueryString';
 import { Subreddit } from './objects/subreddit';
+import { Submission } from './objects/submission';
 
 type Scope =
 	| 'identity'
@@ -343,6 +344,10 @@ class Jsrwrap {
 
 	async getSubreddit(subreddit: string) {
 		return new Subreddit(this, subreddit);
+	}
+
+	async getSubmission(submissionId: string) {
+		return new Submission(this, submissionId);
 	}
 }
 
