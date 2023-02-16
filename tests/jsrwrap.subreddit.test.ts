@@ -18,7 +18,7 @@ beforeAll(async () => {
 
 describe('Subreddit methods', () => {
 	// Test may fail if a new post becomes the top of all time
-	it.only('should get Top submissions of all time', async () => {
+	it('should get Top submissions of all time', async () => {
 		const python = await subreddit.getSubmissions({ sort: 'top', params: { t: 'all' } });
 		python.forEach((v) => {
 			console.log(`${v.title}, by ${v.author}`);
@@ -31,5 +31,10 @@ describe('Subreddit methods', () => {
 	it('should only get 5 submissions', async () => {
 		const python = await subreddit.getSubmissions({ sort: 'new', params: { limit: 5 } });
 		expect(python.length).toBe(5);
+	});
+
+	it.only('should get the subreddit about info', async () => {
+		const about = await subreddit.getAbout();
+		expect(about.title).toBe('Python');
 	});
 });

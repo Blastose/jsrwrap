@@ -1,5 +1,6 @@
 import { Jsrwrap } from 'jsrwarp';
 import { Submission } from 'jsrwarp/types/submission';
+import type { SubredditAbout } from 'jsrwarp/types/subredditTypes';
 
 type ListingParams = {
 	before?: string;
@@ -37,11 +38,20 @@ function parseListingResponse<T>(res: RedditListingResponse<T>) {
 	});
 }
 
+function extractData<T>(res: ChildData<T>) {
+	return res.data;
+}
+
 export class Subreddit {
 	private _reddit: Jsrwrap;
 
 	constructor(_reddit: Jsrwrap, public subreddit: string) {
 		this._reddit = _reddit;
+	}
+
+	async getAbout() {
+		const res = await this._reddit.get<ChildData<SubredditAbout>>(`r/${this.subreddit}/about`);
+		return extractData<SubredditAbout>(res);
 	}
 
 	async getSubmissions(options: GetSubmissionOptions) {
