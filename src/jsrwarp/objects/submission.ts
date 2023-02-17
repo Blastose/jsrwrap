@@ -6,13 +6,18 @@ import type {
 	MoreResponse,
 	TResponse
 } from '../../jsrwarp/types/redditAPIResponse';
-import type { CommentResponse } from '../../jsrwarp/types/comment';
+import type {
+	Comment,
+	CommentResponse,
+	Replies,
+	RepliesResponse
+} from '../../jsrwarp/types/comment';
 
 type SubmissionResponse = ListingResponse<SubmissionType>;
 
 type SubmissionResponseChildren = TResponse<CommentResponse> | MoreResponse;
 
-type SubmissionCommentResponse = ListingResponseFull<SubmissionResponseChildren>;
+type SubmissionCommentResponse = ListingResponseFull<SubmissionResponseChildren[]>;
 
 type GetSubmissionOptions = {
 	comment?: string;
@@ -31,11 +36,17 @@ function extractSubmissionInfo(res: SubmissionResponse) {
 	return res.data.children[0].data;
 }
 
-function flattenCommentsResponse(res: CommentResponse) {
-	while (res.replies !== '') {
-		res.replies.data.children;
+function flattenComments(res: CommentResponse): any {
+	if (res.replies === '') {
+		return res;
 	}
-	return '';
+	const replies = res.replies.data.children.map((v) => {
+		if (v.kind === 'more') {
+			return { ...v.data, type: 'more' };
+		}
+		return flattenComments(v.data);
+	});
+	return { ...res, replies, type: 'comment' };
 }
 
 function extractComments(res: SubmissionCommentResponse) {

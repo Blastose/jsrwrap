@@ -1,8 +1,13 @@
 import { FlairRichtext, Gildings, SubredditType } from './submission';
-import type { ListingResponse } from './redditAPIResponse';
+import type { ListingResponse, ListingResponseFull, MoreResponse } from './redditAPIResponse';
 
 export type CommentResponse = Omit<Comment, 'replies'> & { replies: RepliesResponse };
-type RepliesResponse = ListingResponse<CommentResponse> | '';
+export type RepliesResponse =
+	| ListingResponse<CommentResponse>
+	| ListingResponseFull<MoreResponse[]>
+	| '';
+
+export type Replies = Comment | MoreResponse['data'] | '';
 
 export interface Comment {
 	all_awardings: Awardings[];
@@ -58,7 +63,7 @@ export interface Comment {
 	parent_id: string;
 	permalink: string;
 	removal_reason: null;
-	replies: Comment | '';
+	replies: Replies;
 	report_reasons: null;
 	saved: boolean;
 	score: number;

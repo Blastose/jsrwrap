@@ -18,7 +18,7 @@ export type ListingResponseFull<T> = {
 		dist: number;
 		modhash: string;
 		geo_filter: string;
-		children: T[];
+		children: T;
 	};
 };
 
