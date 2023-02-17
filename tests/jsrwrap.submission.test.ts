@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Jsrwrap } from '../src/jsrwarp/index';
 import { Submission } from '../src/jsrwarp/objects/submission';
-import type { Comment, CommentResponse, RepliesResponse } from '../src/jsrwarp/types/comment';
+import type { Replies } from '../src/jsrwarp/types/comment';
 
 let submission: Submission;
 
@@ -730,41 +730,34 @@ beforeAll(async () => {
 	submission = await reddit.getSubmission('10mr90y');
 });
 
-function flat2(res: CommentResponse): any {
-	if (res.replies === '') {
-		return res;
+function printReplies(replies: Replies) {
+	if (replies !== '') {
+		replies.forEach((c) => {
+			if (c.type === 'comment') {
+				console.log(c.body);
+				printReplies(c.replies);
+			} else {
+				console.log(`Load ${c.count} more comments`);
+			}
+		});
 	}
-	const replies = res.replies.data.children.map((v) => {
-		if (v.kind === 'more') {
-			return { ...v.data, type: 'more' };
+}
+
+function printCommentTree(response: Awaited<ReturnType<typeof submission.fetch>>) {
+	const comments = response.comments;
+	comments.forEach((comm) => {
+		if (comm.type === 'comment') {
+			console.log(comm.body);
+			printReplies(comm.replies);
 		}
-		return flat2(v.data);
 	});
-	return { ...res, replies, type: 'comment' };
 }
 
 describe('Subreddit methods', () => {
-	it.only('flattens comment', () => {
-		const comment = testJsonComment as unknown as CommentResponse;
-		const reply = testJsonReply as unknown as RepliesResponse;
-		// console.log(comment);
-		// console.log(flattenReplies(comment));
+	it.only('flattens comment', async () => {
+		const su = await submission.fetch();
+		printCommentTree(su);
 
-		// console.dir(flattenReplies(comment), { depth: null });
-		console.dir(flat2(comment), { depth: null });
 		expect('a').toBe('b');
-	});
-
-	it('f', async () => {
-		const su = await submission.get();
-		// console.log(su.title);
-		// su.comments.forEach((i) => {
-		// 	if (i.type === 'comment') console.log(`${i.ups} - ${i.body} by ${i.author}`);
-		// });
-
-		if (su.comments[0].type === 'comment') console.log(su.comments[0].replies);
-		expect('a').toBe(
-			`Lad wrote a Python script to download Alexa voice recordings, he didn't expect this email.`
-		);
 	});
 });

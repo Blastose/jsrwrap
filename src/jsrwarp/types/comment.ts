@@ -7,7 +7,10 @@ export type RepliesResponse =
 	| ListingResponseFull<MoreResponse[]>
 	| '';
 
-export type Replies = Comment | MoreResponse['data'] | '';
+export type Replies =
+	| (Comment & { type: 'comment' })[]
+	| (MoreResponse['data'] & { type: 'more' })[]
+	| '';
 
 export interface Comment {
 	all_awardings: Awardings[];

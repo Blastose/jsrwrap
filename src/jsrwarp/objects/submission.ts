@@ -1,17 +1,12 @@
 import { Jsrwrap } from 'jsrwarp';
-import type { Sort, Submission as SubmissionType } from '../../jsrwarp/types/submission';
+import type { Sort, Submission as SubmissionType } from 'jsrwarp/types/submission';
 import type {
 	ListingResponse,
 	ListingResponseFull,
 	MoreResponse,
 	TResponse
-} from '../../jsrwarp/types/redditAPIResponse';
-import type {
-	Comment,
-	CommentResponse,
-	Replies,
-	RepliesResponse
-} from '../../jsrwarp/types/comment';
+} from 'jsrwarp/types/redditAPIResponse';
+import type { Comment, CommentResponse, Replies } from 'jsrwarp/types/comment';
 
 type SubmissionResponse = ListingResponse<SubmissionType>;
 
@@ -36,9 +31,9 @@ function extractSubmissionInfo(res: SubmissionResponse) {
 	return res.data.children[0].data;
 }
 
-function flattenComments(res: CommentResponse): any {
+function flattenComments(res: CommentResponse): Comment & { type: 'comment' } {
 	if (res.replies === '') {
-		return res;
+		return { ...(res as Comment), type: 'comment' };
 	}
 	const replies = res.replies.data.children.map((v) => {
 		if (v.kind === 'more') {
@@ -46,18 +41,19 @@ function flattenComments(res: CommentResponse): any {
 		}
 		return flattenComments(v.data);
 	});
-	return { ...res, replies, type: 'comment' };
+	return { ...res, replies: replies as unknown as Replies, type: 'comment' };
 }
 
 function extractComments(res: SubmissionCommentResponse) {
 	return res.data.children.map((item) => {
 		if (item.kind !== 'more') {
-			return { ...item.data, type: 'comment' as const };
+			return { ...flattenComments(item.data), type: 'comment' as const };
 		} else {
 			return { ...item.data, type: 'more' as const };
 		}
 	});
 }
+
 export class Submission {
 	private _reddit: Jsrwrap;
 
@@ -65,7 +61,7 @@ export class Submission {
 		this._reddit = _reddit;
 	}
 
-	async get(options?: GetSubmissionOptions) {
+	async fetch(options?: GetSubmissionOptions) {
 		const res = await this._reddit.get<[SubmissionResponse, SubmissionCommentResponse]>(
 			`/comments/${this.submissionId}`,
 			options
