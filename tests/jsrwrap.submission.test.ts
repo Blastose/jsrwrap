@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Jsrwrap } from '../src/jsrwarp/index';
-import { Submission } from '../src/jsrwarp/objects/submission';
-import type { Replies } from '../src/jsrwarp/types/comment';
+import { Jsrwrap } from '../src/jsrwrap/index';
+import { Submission } from '../src/jsrwrap/objects/submission';
+import type { Replies } from '../src/jsrwrap/types/comment';
 
 let submission: Submission;
 
@@ -759,5 +759,9 @@ describe('Subreddit methods', () => {
 		printCommentTree(su);
 
 		expect('a').toBe('b');
+	});
+
+	it('gets comments and stuff???', async () => {
+		const submissionResult = await submission.fetch();
 	});
 });

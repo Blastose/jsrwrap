@@ -1,7 +1,7 @@
-import { Jsrwrap } from 'jsrwarp';
-import type { Sort, Submission as SubmissionType } from 'jsrwarp/types/submission';
-import type { ListingResponseFull, MoreResponse, TResponse } from 'jsrwarp/types/redditAPIResponse';
-import type { Comment, CommentResponse } from 'jsrwarp/types/comment';
+import { Jsrwrap } from 'jsrwrap';
+import type { Sort, Submission as SubmissionType } from 'jsrwrap/types/submission';
+import type { ListingResponseFull, MoreResponse, TResponse } from 'jsrwrap/types/redditAPIResponse';
+import type { Comment, CommentResponse } from 'jsrwrap/types/comment';
 
 type SubmissionResponse = ListingResponseFull<[TResponse<SubmissionType>]>;
 type SubmissionResponseComments = ListingResponseFull<

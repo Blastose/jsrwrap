@@ -1,4 +1,4 @@
-import { Jsrwrap } from 'jsrwarp';
+import { Jsrwrap } from 'jsrwrap';
 
 export class Comment {
 	private _reddit: Jsrwrap;
