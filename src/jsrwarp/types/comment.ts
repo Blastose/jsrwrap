@@ -1,15 +1,13 @@
 import { FlairRichtext, Gildings, SubredditType } from './submission';
-import type { ListingResponse, ListingResponseFull, MoreResponse } from './redditAPIResponse';
+import type { ListingResponseFull, MoreResponse, TResponse } from './redditAPIResponse';
 
 export type CommentResponse = Omit<Comment, 'replies'> & { replies: RepliesResponse };
 export type RepliesResponse =
-	| ListingResponse<CommentResponse>
-	| ListingResponseFull<MoreResponse[]>
+	| ListingResponseFull<(TResponse<CommentResponse> | MoreResponse)[]>
 	| '';
 
 export type Replies =
-	| (Comment & { type: 'comment' })[]
-	| (MoreResponse['data'] & { type: 'more' })[]
+	| ((Comment & { type: 'comment' }) | (MoreResponse['data'] & { type: 'more' }))[]
 	| '';
 
 export interface Comment {

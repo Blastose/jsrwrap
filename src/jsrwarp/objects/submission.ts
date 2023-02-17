@@ -1,18 +1,12 @@
 import { Jsrwrap } from 'jsrwarp';
 import type { Sort, Submission as SubmissionType } from 'jsrwarp/types/submission';
-import type {
-	ListingResponse,
-	ListingResponseFull,
-	MoreResponse,
-	TResponse
-} from 'jsrwarp/types/redditAPIResponse';
-import type { Comment, CommentResponse, Replies } from 'jsrwarp/types/comment';
+import type { ListingResponseFull, MoreResponse, TResponse } from 'jsrwarp/types/redditAPIResponse';
+import type { Comment, CommentResponse } from 'jsrwarp/types/comment';
 
-type SubmissionResponse = ListingResponse<SubmissionType>;
-
-type SubmissionResponseChildren = TResponse<CommentResponse> | MoreResponse;
-
-type SubmissionCommentResponse = ListingResponseFull<SubmissionResponseChildren[]>;
+type SubmissionResponse = ListingResponseFull<[TResponse<SubmissionType>]>;
+type SubmissionResponseComments = ListingResponseFull<
+	(TResponse<CommentResponse> | MoreResponse)[]
+>;
 
 type GetSubmissionOptions = {
 	comment?: string;
@@ -33,21 +27,23 @@ function extractSubmissionInfo(res: SubmissionResponse) {
 
 function flattenComments(res: CommentResponse): Comment & { type: 'comment' } {
 	if (res.replies === '') {
-		return { ...(res as Comment), type: 'comment' };
+		return { ...(res as Comment), type: 'comment' as const };
 	}
 	const replies = res.replies.data.children.map((v) => {
 		if (v.kind === 'more') {
-			return { ...v.data, type: 'more' };
+			return { ...v.data, type: 'more' as const };
 		}
 		return flattenComments(v.data);
 	});
-	return { ...res, replies: replies as unknown as Replies, type: 'comment' };
+	return { ...res, replies: replies, type: 'comment' as const };
 }
 
-function extractComments(res: SubmissionCommentResponse) {
+function extractComments(
+	res: SubmissionResponseComments
+): ((Comment & { type: 'comment' }) | (MoreResponse['data'] & { type: 'more' }))[] {
 	return res.data.children.map((item) => {
 		if (item.kind !== 'more') {
-			return { ...flattenComments(item.data), type: 'comment' as const };
+			return { ...flattenComments(item.data) };
 		} else {
 			return { ...item.data, type: 'more' as const };
 		}
@@ -62,12 +58,9 @@ export class Submission {
 	}
 
 	async fetch(options?: GetSubmissionOptions) {
-		const res = await this._reddit.get<[SubmissionResponse, SubmissionCommentResponse]>(
-			`/comments/${this.submissionId}`,
-			options
-		);
-
-		const [submission, comments] = res;
+		const [submission, comments] = await this._reddit.get<
+			[SubmissionResponse, SubmissionResponseComments]
+		>(`/comments/${this.submissionId}`, options);
 
 		return {
 			...extractSubmissionInfo(submission),
