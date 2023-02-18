@@ -50,4 +50,28 @@ describe('Submission methods', () => {
 			printCommentTree(submissionResult);
 		}).not.toThrow();
 	});
+
+	it('gets more children comments', async () => {
+		await submission.getMoreChildren('1135sc2', {
+			children: [
+				'j8py668',
+				'j8qwy1n',
+				'j8qmron',
+				'j8pgj4s',
+				'j8ownzd',
+				'j8piyml',
+				'j8pz6mm',
+				'j8p7pe9',
+				'j8qayoi',
+				'j8q9ok7',
+				'j8q8dx5',
+				'j8qyrbt',
+				'j8pig1n',
+				'j8py4ik',
+				'j8q1b1b'
+			],
+			limit_children: false,
+			sort: 'confidence'
+		});
+	});
 });

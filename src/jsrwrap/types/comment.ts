@@ -1,6 +1,15 @@
 import { FlairRichtext, Gildings, SubredditType } from './submission';
 import type { ListingResponseFull, MoreResponse, TResponse } from './redditAPIResponse';
 
+export type MoreChildrenResponse = {
+	json: {
+		errors: any[];
+		data: {
+			things: (TResponse<Comment> | MoreResponse)[];
+		};
+	};
+};
+
 export type CommentResponse = Omit<Comment, 'replies'> & { replies: RepliesResponse };
 export type RepliesResponse =
 	| ListingResponseFull<(TResponse<CommentResponse> | MoreResponse)[]>
@@ -38,7 +47,7 @@ export interface Comment {
 	collapsed: boolean;
 	collapsed_because_crowd_control: null;
 	collapsed_reason: null;
-	collapsed_reason_code: null;
+	collapsed_reason_code: 'deleted' | string | null;
 	comment_type: null;
 	controversiality: number;
 	created: number;
