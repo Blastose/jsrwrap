@@ -1,11 +1,11 @@
 import 'reflect-metadata';
 import { plainToInstance } from 'class-transformer';
 import fetch from 'node-fetch';
-import OAuthError from './oauthError';
-import { RedditAccount } from './objects/redditAccount';
-import { buildQueryString } from './utils/buildQueryString';
-import { Subreddit } from './objects/subreddit';
-import { Submission } from './objects/submission';
+import OAuthError from './oauthError.js';
+import { RedditAccount } from './objects/redditAccount.js';
+import { buildQueryString } from './utils/buildQueryString.js';
+import { Subreddit } from './objects/subreddit.js';
+import { Submission } from './objects/submission.js';
 
 type Scope =
 	| 'identity'

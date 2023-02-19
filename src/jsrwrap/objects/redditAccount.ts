@@ -1,6 +1,6 @@
 import { Jsrwrap } from 'jsrwrap';
-import { Features, Subreddit, User, Trophy, Karma, Prefs } from '../types/redditAccount';
-import { extractData, Data } from '../utils/extractData';
+import { Features, Subreddit, User, Trophy, Karma, Prefs } from '../types/redditAccount.js';
+import { extractData, Data } from '../utils/extractData.js';
 
 export class RedditAccount {
 	private _reddit: Jsrwrap;

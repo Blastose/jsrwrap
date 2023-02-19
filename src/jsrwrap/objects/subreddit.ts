@@ -1,7 +1,7 @@
 import { Jsrwrap } from 'jsrwrap';
 import type { Submission } from 'jsrwrap/types/submission';
-import type { SubredditAbout } from '../../jsrwrap/types/subredditTypes';
-import type { ListingResponse, TResponse } from '../../jsrwrap/types/redditAPIResponse';
+import type { SubredditAbout } from '../../jsrwrap/types/subredditTypes.js';
+import type { ListingResponse, TResponse } from '../../jsrwrap/types/redditAPIResponse.js';
 
 type ListingParams = {
 	before?: string;
