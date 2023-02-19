@@ -52,7 +52,7 @@ describe('Submission methods', () => {
 	});
 
 	it('gets more children comments', async () => {
-		await submission.getMoreChildren('1135sc2', {
+		const children = await submission.getMoreChildren('1135sc2', {
 			children: [
 				'j8py668',
 				'j8qwy1n',
@@ -73,5 +73,6 @@ describe('Submission methods', () => {
 			limit_children: false,
 			sort: 'confidence'
 		});
+		expect(children.length).toBe(15);
 	});
 });
