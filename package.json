@@ -16,7 +16,7 @@
 	],
 	"type": "module",
 	"author": "Blastose",
-	"license": "ISC",
+	"license": "MIT",
 	"devDependencies": {
 		"@types/jest": "^29.0.3",
 		"@typescript-eslint/eslint-plugin": "^5.38.0",
