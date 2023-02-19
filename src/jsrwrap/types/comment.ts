@@ -1,5 +1,5 @@
-import { FlairRichtext, Gildings, SubredditType } from './submission';
-import type { ListingResponseFull, MoreResponse, TResponse } from './redditAPIResponse';
+import { FlairRichtext, Gildings, SubredditType } from './submission.js';
+import type { ListingResponseFull, MoreResponse, TResponse } from './redditAPIResponse.js';
 
 export type MoreChildrenResponse = {
 	json: {

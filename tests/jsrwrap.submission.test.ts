@@ -14,7 +14,7 @@ beforeAll(async () => {
 		process.env.REFRESH_TOKEN!
 	);
 	await reddit.refreshAccessToken();
-	submission = await reddit.getSubmission('10mr90y');
+	submission = reddit.getSubmission('10mr90y');
 });
 
 function printReplies(replies: Replies) {

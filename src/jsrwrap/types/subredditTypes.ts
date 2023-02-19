@@ -1,4 +1,4 @@
-import type { FlairRichtext, Sort, SubredditType } from './submission';
+import type { FlairRichtext, Sort, SubredditType } from './submission.js';
 
 export interface SubredditAbout {
 	accept_followers: boolean;

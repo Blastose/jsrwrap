@@ -13,7 +13,7 @@ beforeAll(async () => {
 		process.env.REFRESH_TOKEN!
 	);
 	await reddit.refreshAccessToken();
-	subreddit = await reddit.getSubreddit('python');
+	subreddit = reddit.getSubreddit('python');
 });
 
 describe('Subreddit methods', () => {
