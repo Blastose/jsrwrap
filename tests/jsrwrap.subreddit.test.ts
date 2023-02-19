@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Jsrwrap } from '../src/jsrwrap/index';
-import { Subreddit } from '../src/jsrwrap/objects/subreddit';
+import { Jsrwrap } from '../src/jsrwrap/index.js';
+import { Subreddit } from '../src/jsrwrap/objects/subreddit.js';
 
 let subreddit: Subreddit;
 

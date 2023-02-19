@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Jsrwrap } from '../src/jsrwrap/index';
-import { RedditAccount } from '../src/jsrwrap/objects/redditAccount';
+import { Jsrwrap } from '../src/jsrwrap/index.js';
+import { RedditAccount } from '../src/jsrwrap/objects/redditAccount.js';
 
 let account: RedditAccount;
 

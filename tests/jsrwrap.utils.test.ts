@@ -1,4 +1,4 @@
-import { buildQueryString } from '../src/jsrwrap/utils/buildQueryString';
+import { buildQueryString } from '../src/jsrwrap/utils/buildQueryString.js';
 
 describe('buildQueryString', () => {
 	it('should get build the query string', () => {

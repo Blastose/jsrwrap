@@ -1,5 +1,5 @@
-import { Jsrwrap } from 'jsrwrap';
-import type { Submission } from 'jsrwrap/types/submission';
+import { Jsrwrap } from '../../jsrwrap/index.js';
+import type { Submission } from '../../jsrwrap/types/submission.js';
 import type { SubredditAbout } from '../../jsrwrap/types/subredditTypes.js';
 import type { ListingResponse, TResponse } from '../../jsrwrap/types/redditAPIResponse.js';
 

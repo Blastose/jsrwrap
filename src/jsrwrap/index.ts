@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { plainToInstance } from 'class-transformer';
 import fetch from 'node-fetch';
-import OAuthError from './oauthError.js';
+import { OAuthError } from './oauthError.js';
 import { RedditAccount } from './objects/redditAccount.js';
 import { buildQueryString } from './utils/buildQueryString.js';
 import { Subreddit } from './objects/subreddit.js';

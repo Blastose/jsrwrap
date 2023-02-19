@@ -1,8 +1,13 @@
 {
 	"root": true,
 	"parser": "@typescript-eslint/parser",
-	"plugins": ["@typescript-eslint"],
-	"extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
+	"plugins": ["@typescript-eslint", "require-extensions"],
+	"extends": [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
+		"prettier",
+		"plugin:require-extensions/recommended"
+	],
 	"env": {
 		"browser": true,
 		"es2017": true,

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Jsrwrap } from '../src/jsrwrap/index';
-import { Submission } from '../src/jsrwrap/objects/submission';
-import type { Replies } from '../src/jsrwrap/types/comment';
+import { Jsrwrap } from '../src/jsrwrap/index.js';
+import { Submission } from '../src/jsrwrap/objects/submission.js';
+import type { Replies } from '../src/jsrwrap/types/comment.js';
 
 let submission: Submission;
 
