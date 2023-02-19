@@ -5,6 +5,7 @@ import OAuthError from './oauthError';
 import { RedditAccount } from './objects/redditAccount';
 import { buildQueryString } from './utils/buildQueryString';
 import { Subreddit } from './objects/subreddit';
+import { Submission } from './objects/submission';
 
 type Scope =
 	| 'identity'
@@ -316,6 +317,24 @@ class Jsrwrap {
 		return (await res.json()) as T;
 	}
 
+	async post<T>(uri: string, params?: Record<string, unknown>) {
+		const res = await fetch(`https://oauth.reddit.com/${uri}`, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${this.accessToken}`,
+				'Content-Type': 'application/x-www-form-urlencoded',
+				'User-Agent': this.userAgent
+			},
+			body: buildQueryString(params)
+		});
+
+		if (res.status !== 200) {
+			throw new Error('');
+		}
+
+		return (await res.json()) as T;
+	}
+
 	async patch(uri: string, data: string) {
 		const res = await fetch(`https://oauth.reddit.com/${uri}`, {
 			method: 'PATCH',
@@ -343,6 +362,10 @@ class Jsrwrap {
 
 	async getSubreddit(subreddit: string) {
 		return new Subreddit(this, subreddit);
+	}
+
+	async getSubmission(submissionId: string) {
+		return new Submission(this, submissionId);
 	}
 }
 

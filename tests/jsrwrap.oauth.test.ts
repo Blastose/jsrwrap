@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { Jsrwrap } from '../src/jsrwarp/index';
-import OAuthError from '../src/jsrwarp/oauthError';
+import { Jsrwrap } from '../src/jsrwrap/index';
+import OAuthError from '../src/jsrwrap/oauthError';
 
 describe('Jsrwrap static methods', () => {
 	it('should generate a valid authorization URL', () => {

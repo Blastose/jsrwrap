@@ -3,10 +3,22 @@ export type ListingResponse<T> = {
 	data: {
 		before: string | null;
 		after: string | null;
-		dis: number;
+		dist: number;
 		modhash: string;
 		geo_filter: string;
 		children: TResponse<T>[];
+	};
+};
+
+export type ListingResponseFull<T> = {
+	kind: 'listing';
+	data: {
+		before: string | null;
+		after: string | null;
+		dist: number;
+		modhash: string;
+		geo_filter: string;
+		children: T;
 	};
 };
 

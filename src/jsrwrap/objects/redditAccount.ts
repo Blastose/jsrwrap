@@ -1,4 +1,4 @@
-import { Jsrwrap } from 'jsrwarp';
+import { Jsrwrap } from 'jsrwrap';
 import { Features, Subreddit, User, Trophy, Karma, Prefs } from '../types/redditAccount';
 import { extractData, Data } from '../utils/extractData';
 

@@ -1,7 +1,7 @@
-import { Jsrwrap } from 'jsrwarp';
-import type { Submission } from '../../jsrwarp/types/submission';
-import type { SubredditAbout } from '../../jsrwarp/types/subredditTypes';
-import type { ListingResponse, TResponse } from '../../jsrwarp/types/redditAPIResponse';
+import { Jsrwrap } from 'jsrwrap';
+import type { Submission } from 'jsrwrap/types/submission';
+import type { SubredditAbout } from '../../jsrwrap/types/subredditTypes';
+import type { ListingResponse, TResponse } from '../../jsrwrap/types/redditAPIResponse';
 
 type ListingParams = {
 	before?: string;
@@ -35,7 +35,7 @@ export class Subreddit {
 
 	async getAbout() {
 		const res = await this._reddit.get<TResponse<SubredditAbout>>(`r/${this.subreddit}/about`);
-		return extractData<SubredditAbout>(res);
+		return extractData(res);
 	}
 
 	async getSubmissions(options: GetSubmissionOptions) {
@@ -43,6 +43,6 @@ export class Subreddit {
 			`r/${this.subreddit}/${options.sort}`,
 			options.params
 		);
-		return parseListingResponse<Submission>(res);
+		return parseListingResponse(res);
 	}
 }
