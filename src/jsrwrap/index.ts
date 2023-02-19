@@ -360,11 +360,11 @@ class Jsrwrap {
 		return redditAccount;
 	}
 
-	async getSubreddit(subreddit: string) {
+	getSubreddit(subreddit: string) {
 		return new Subreddit(this, subreddit);
 	}
 
-	async getSubmission(submissionId: string) {
+	getSubmission(submissionId: string) {
 		return new Submission(this, submissionId);
 	}
 }
