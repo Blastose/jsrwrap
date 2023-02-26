@@ -278,7 +278,7 @@ describe("Jsrwrap token retrieval", () => {
       test_data.CLIENT_ID,
       test_data.CLIENT_SECRET,
       "web:JsrwrapApiWrapper:v0.0.1",
-      test_data.REFRESH_TOKEN
+      "invalid_refresh_token"
     );
 
     await assertRejects(
