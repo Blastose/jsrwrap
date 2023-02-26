@@ -7,6 +7,7 @@ import type {
 } from "./types/redditAPIResponse.ts";
 import type {
   Comment,
+  CommentFull,
   CommentResponse,
   MoreChildrenResponse,
 } from "./types/comment.ts";
@@ -52,12 +53,7 @@ function flattenComments(res: CommentResponse): Comment & { type: "comment" } {
   return { ...res, replies: replies, type: "comment" as const };
 }
 
-function extractComments(
-  res: SubmissionResponseComments
-): (
-  | (Comment & { type: "comment" })
-  | (MoreResponse["data"] & { type: "more" })
-)[] {
+function extractComments(res: SubmissionResponseComments): CommentFull[] {
   return res.data.children.map((item) => {
     if (item.kind !== "more") {
       return { ...flattenComments(item.data) };
@@ -103,7 +99,7 @@ function buildMoreChildrenTree(things: (TResponse<Comment> | MoreResponse)[]) {
       resultArray.push(currentItem);
     }
     return resultArray;
-  }, [] as ((Comment & { type: "comment" }) | (MoreResponse["data"] & { type: "more" }))[]);
+  }, [] as CommentFull[]);
 
   return treeArray;
 }

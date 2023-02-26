@@ -21,12 +21,11 @@ export type RepliesResponse =
   | ListingResponseFull<(TResponse<CommentResponse> | MoreResponse)[]>
   | "";
 
-export type Replies =
-  | (
-    | (Comment & { type: "comment" })
-    | (MoreResponse["data"] & { type: "more" })
-  )[]
-  | "";
+export type CommentFull =
+  | (Comment & { type: "comment" })
+  | (MoreResponse["data"] & { type: "more" });
+
+export type Replies = CommentFull[] | "";
 
 export interface Comment {
   all_awardings: Awardings[];
