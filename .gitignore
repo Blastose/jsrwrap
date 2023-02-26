@@ -1,6 +1,5 @@
-node_modules
-/lib
-.jest
 .env
 .env.*
-!.env.example
+/npm
+/test_data
+/cov_profile
