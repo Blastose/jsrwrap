@@ -146,7 +146,7 @@ export interface Prefs {
   show_location_based_recommendations: boolean;
 }
 
-export interface Subreddit {
+export interface SubredditUser {
   default_set: boolean;
   user_is_contributor: boolean;
   banner_img: string;
