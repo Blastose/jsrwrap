@@ -327,7 +327,7 @@ export class Jsrwrap {
 
   async get<T>(uri: string, params?: Record<string, unknown>) {
     const res = await fetch(
-      `https://oauth.reddit.com/${uri}?${buildQueryString(params)}`,
+      `https://oauth.reddit.com/${uri}?raw_json=1&${buildQueryString(params)}`,
       {
         method: "GET",
         headers: {
@@ -353,7 +353,7 @@ export class Jsrwrap {
         "Content-Type": "application/x-www-form-urlencoded",
         "User-Agent": this.userAgent,
       },
-      body: buildQueryString(params),
+      body: `raw_json=1&${buildQueryString(params)}`,
     });
 
     if (res.status !== 200) {
