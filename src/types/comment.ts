@@ -9,7 +9,10 @@ export type MoreChildrenResponse = {
   json: {
     errors: unknown[];
     data: {
-      things: (TResponse<Comment> | MoreResponse)[];
+      things: (
+        | TResponse<Omit<Comment, "replies"> & { replies: "" }>
+        | MoreResponse
+      )[];
     };
   };
 };
@@ -25,7 +28,7 @@ export type CommentFull =
   | (Comment & { type: "comment" })
   | (MoreResponse["data"] & { type: "more" });
 
-export type Replies = CommentFull[] | "";
+export type Replies = CommentFull[];
 
 export interface Comment {
   all_awardings: Awardings[];
