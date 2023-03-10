@@ -1,4 +1,9 @@
-import { FlairRichtext, Gildings, SubredditType } from "./submission.ts";
+import {
+  FlairRichtext,
+  Gildings,
+  SubredditType,
+  MediaMetadata,
+} from "./submission.ts";
 import type {
   ListingResponseFull,
   MoreResponse,
@@ -74,6 +79,7 @@ export interface Comment {
   likes: boolean | null;
   link_id: string;
   locked: boolean;
+  media_metadata?: MediaMetadata;
   mod_note: string | null;
   mod_reason_by: string | null;
   mod_reason_title: string | null;
