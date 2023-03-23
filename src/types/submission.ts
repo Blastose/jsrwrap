@@ -27,6 +27,8 @@ export interface SubmissionData {
   contest_mode: boolean;
   created: number;
   created_utc: number;
+  crosspost_parent?: string;
+  crosspost_parent_list?: [SubmissionData];
   discussion_type: null;
   distinguished: "admin" | "moderator" | null;
   domain: string;
