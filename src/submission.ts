@@ -10,6 +10,7 @@ import type {
   CommentFull,
   CommentResponse,
   MoreChildrenResponse,
+  Replies,
 } from "./types/comment.ts";
 
 type SubmissionResponse = ListingResponseFull<[TResponse<SubmissionData>]>;
@@ -42,7 +43,11 @@ function extractSubmissionInfo(res: SubmissionResponse) {
 
 function flattenComments(res: CommentResponse): Comment & { type: "comment" } {
   if (res.replies === "") {
-    return { ...(res as Comment), type: "comment" as const };
+    return {
+      ...(res as unknown as Comment),
+      replies: [],
+      type: "comment" as const,
+    };
   }
   const replies = res.replies.data.children.map((v) => {
     if (v.kind === "more") {
@@ -67,12 +72,21 @@ function removePrefix(text: string, textToRemove: string) {
   return text.replace(textToRemove, "");
 }
 
-function buildMoreChildrenTree(things: (TResponse<Comment> | MoreResponse)[]) {
+function buildMoreChildrenTree(
+  things: (
+    | TResponse<Omit<Comment, "replies"> & { replies: "" }>
+    | MoreResponse
+  )[]
+) {
   const commentData = things.map((thing) => {
     if (thing.kind === "more") {
       return { ...thing.data, type: "more" as const };
     } else {
-      return { ...thing.data, type: "comment" as const };
+      return {
+        ...thing.data,
+        replies: [] as Replies,
+        type: "comment" as const,
+      };
     }
   });
 
@@ -86,9 +100,6 @@ function buildMoreChildrenTree(things: (TResponse<Comment> | MoreResponse)[]) {
     );
     if (parentComment) {
       if (parentComment.type !== "more") {
-        if (parentComment.replies === "") {
-          parentComment.replies = [];
-        }
         if (currentItem.type === "more") {
           parentComment.replies.push(currentItem);
         } else {

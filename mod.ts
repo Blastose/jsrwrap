@@ -38,6 +38,9 @@ export type {
   Source,
   SubmissionData,
   SubredditType,
+  AlbumEntry,
+  GalleryData,
+  MediaMetadata,
 } from "./src/types/submission.ts";
 export type {
   CommentContributionSettings,

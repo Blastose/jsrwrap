@@ -27,11 +27,14 @@ export interface SubmissionData {
   contest_mode: boolean;
   created: number;
   created_utc: number;
+  crosspost_parent?: string;
+  crosspost_parent_list?: [SubmissionData];
   discussion_type: null;
   distinguished: "admin" | "moderator" | null;
   domain: string;
   downs: number;
   edited: number | boolean;
+  gallery_data?: GalleryData;
   gilded: number;
   gildings: Gildings;
   hidden: boolean;
@@ -39,6 +42,7 @@ export interface SubmissionData {
   id: string;
   is_created_from_ads_ui: boolean;
   is_crosspostable: boolean;
+  is_gallery?: boolean;
   is_meta: boolean;
   is_original_content: boolean;
   is_reddit_media_domain: boolean;
@@ -56,6 +60,7 @@ export interface SubmissionData {
   locked: boolean;
   media: Media | null;
   media_embed: MediaEmbed;
+  media_metadata?: MediaMetadata;
   media_only: boolean;
   mod_note: string;
   mod_reason_by: string;
@@ -70,7 +75,7 @@ export interface SubmissionData {
   parent_whitelist_status: string;
   permalink: string;
   pinned: boolean;
-  post_hint: string;
+  post_hint?: string;
   preview: Preview;
   pwls: number;
   quarantine: boolean;
@@ -112,6 +117,28 @@ export interface SubmissionData {
   wls: number;
 }
 
+export interface GalleryData {
+  items: { media_id: string; id: number }[];
+}
+
+export interface MediaMetadata {
+  [media_id: string]: {
+    status: string;
+    e: string | "Image";
+    m: string | "image/png";
+    p: AlbumEntry[];
+    s: AlbumEntry;
+    t?: string | "sticker";
+    id: string;
+  };
+}
+
+export interface AlbumEntry {
+  y: string;
+  x: string;
+  u: string;
+}
+
 // https://github.com/not-an-aardvark/snoowrap/blob/c301bd604a16ad035a0dc0f8ba99e2a195957989/src/objects/VoteableContent.d.ts#L16
 export interface Gildings {
   // Number of Reddit Silver awarded
@@ -139,7 +166,7 @@ export interface ImagePreview {
   id: string;
   resolutions: Source[];
   source: Source;
-  variants: Gildings;
+  variants: unknown;
 }
 
 export interface Source {

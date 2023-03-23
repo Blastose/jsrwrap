@@ -10,18 +10,16 @@ import { Submission } from "../src/submission.ts";
 import type { Replies } from "../src/types/comment.ts";
 
 function printReplies(replies: Replies) {
-  if (replies !== "") {
-    replies.forEach((c) => {
-      if (c.type === "comment") {
-        // console.log(c.body);
-        c.body;
-        printReplies(c.replies);
-      } else {
-        // console.log(`Load ${c.count} more comments`);
-        c.count;
-      }
-    });
-  }
+  replies.forEach((c) => {
+    if (c.type === "comment") {
+      // console.log(c.body);
+      c.body;
+      printReplies(c.replies);
+    } else {
+      // console.log(`Load ${c.count} more comments`);
+      c.count;
+    }
+  });
 }
 
 function printCommentTree(response: Awaited<ReturnType<Submission["fetch"]>>) {
@@ -60,6 +58,7 @@ describe("Submission methods", () => {
 
     // Submission with load more comments as direct child
     const submissionAskreddit = await reddit.getSubmission("1135sc2").fetch();
+
     printCommentTree(submissionAskreddit);
   });
 
@@ -88,5 +87,13 @@ describe("Submission methods", () => {
         sort: "confidence",
       });
     assertEquals(childrenNextJs.length, 15);
+  });
+
+  it("gets more children comments", async () => {
+    await reddit.getSubmission("11fifjy").getMoreChildren({
+      children: ["jakiqc4"],
+      limit_children: false,
+      sort: "confidence",
+    });
   });
 });
