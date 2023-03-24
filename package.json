@@ -1,0 +1,49 @@
+{
+	"name": "jsrwrap",
+	"version": "0.1.0",
+	"description": "API wrapper for Reddit",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Blastose/reddit-md-to-html.git"
+	},
+	"module": "./lib/index.js",
+	"types": "./lib/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./lib/index.d.ts",
+			"import": "./lib/index.js",
+			"require": "./lib/index.js"
+		}
+	},
+	"engines": {
+		"node": ">=14.16"
+	},
+	"scripts": {
+		"build": "tsc",
+		"test": "vitest run",
+		"coverage": "vitest run --coverage",
+		"prepublishOnly": "tsc"
+	},
+	"keywords": [],
+	"files": [
+		"lib/**/*"
+	],
+	"type": "module",
+	"author": "Blastose",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/node": "^18.15.0",
+		"@typescript-eslint/eslint-plugin": "^5.38.0",
+		"@typescript-eslint/parser": "^5.38.0",
+		"@vitest/coverage-c8": "^0.29.3",
+		"dotenv": "^16.0.3",
+		"eslint": "^8.23.1",
+		"eslint-config-prettier": "^8.5.0",
+		"prettier": "^2.7.1",
+		"typescript": "^5.0.2",
+		"vitest": "^0.29.3"
+	},
+	"dependencies": {
+		"node-fetch": "^3.3.1"
+	}
+}

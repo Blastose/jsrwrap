@@ -1,5 +1,6 @@
+/node_modules
+/lib
+/coverage
 .env
 .env.*
-/npm
-/test_data
-/cov_profile
+!.env.example
