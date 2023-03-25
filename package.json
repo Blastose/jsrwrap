@@ -4,7 +4,7 @@
 	"description": "API wrapper for Reddit",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Blastose/reddit-md-to-html.git"
+		"url": "https://github.com/Blastose/jsrwrap.git"
 	},
 	"module": "./lib/index.js",
 	"types": "./lib/index.d.ts",
@@ -13,6 +13,18 @@
 			"types": "./lib/index.d.ts",
 			"import": "./lib/index.js",
 			"require": "./lib/index.js"
+		},
+		"./types": {
+			"types": "./lib/types/index.d.ts",
+			"import": "./lib/types/index.js",
+			"require": "./lib/types/index.js"
+		}
+	},
+	"typesVersions": {
+		"*": {
+			"types": [
+				"./lib/types/index.d.ts"
+			]
 		}
 	},
 	"engines": {
