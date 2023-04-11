@@ -1,4 +1,5 @@
 import { buildQueryString } from '../src/utils/buildQueryString.js';
+import { getRedditVideoLinks } from '../src/utils/getRedditVideoLinks.js';
 import { describe, it, expect } from 'vitest';
 
 describe('buildQueryString', () => {
@@ -10,5 +11,11 @@ describe('buildQueryString', () => {
 	it('returns an empty string when params are undefined', () => {
 		const result = buildQueryString(undefined);
 		expect(result).toBe('');
+	});
+});
+
+describe.only('getRedditVideoLinks', () => {
+	it('getRedditVideoLinks', async () => {
+		await getRedditVideoLinks('https://v.redd.it/40fvh634rmsa1/');
 	});
 });
