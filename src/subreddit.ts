@@ -12,9 +12,10 @@ type ListingParams = {
 
 type Time = 'hour' | 'day' | 'week' | 'month' | 'year' | 'all';
 
-type GetSubmissionOptions =
-	| { sort: 'top' | 'controversial'; params: ListingParams & { t: Time } }
-	| { sort: 'hot' | 'best' | 'rising' | 'new'; params: ListingParams };
+type GetSubmissionOptions = {
+	sort: 'top' | 'controversial' | 'hot' | 'best' | 'rising' | 'new';
+	params?: ListingParams & { t?: Time };
+};
 
 function parseListingResponse<T>(res: ListingResponse<T>) {
 	return res.data.children.map((child) => {
