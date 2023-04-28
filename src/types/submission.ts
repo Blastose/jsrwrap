@@ -129,6 +129,8 @@ export interface MediaMetadataImage {
 	status: 'valid';
 	e: 'Image';
 	m: 'image/png' | 'image/jpg';
+	p?: AlbumEntry[];
+	o?: AlbumEntry[];
 	s: AlbumEntry;
 	t: 'sticker';
 	id: string;
@@ -138,15 +140,15 @@ export interface MediaMetadataGif {
 	status: 'valid';
 	e: 'AnimatedImage';
 	m: 'image/gif';
-	ext: 'string';
-	p: AlbumEntry[];
+	ext?: 'string';
+	p?: AlbumEntry[];
 	s: {
 		y: number;
 		gif: string;
-		mp4: string;
+		mp4?: string;
 		x: number;
 	};
-	t: 'giphy';
+	t: 'giphy' | 'sticker';
 	id: string;
 }
 
