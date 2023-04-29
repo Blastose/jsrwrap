@@ -16,21 +16,21 @@ type SubmissionResponseComments = ListingResponseFull<
 
 type GetSubmissionOptions = {
 	comment?: string;
-	context: number;
+	context?: number;
 	depth?: number;
 	limit?: number;
-	showedits: boolean;
-	showmedia: boolean;
-	showtitle: boolean;
-	sort: Sort;
-	threaded: boolean;
-	truncate: number;
+	showedits?: boolean;
+	showmedia?: boolean;
+	showtitle?: boolean;
+	sort?: Sort;
+	threaded?: boolean;
+	truncate?: number;
 };
 
 type MorechildrenOptions = {
 	children: string[];
 	limit_children: boolean;
-	sort: Sort;
+	sort?: Sort;
 };
 
 function extractSubmissionInfo(res: SubmissionResponse) {
