@@ -18,9 +18,14 @@ describe('Subreddit methods', () => {
 		user = reddit.getUser('AutoShonenpon');
 	});
 
-	it(`gets the user's posts and comments`, async () => {
-		const overview = await user.getOverview();
-		expect(overview[0].type).toBe('comment');
+	it("gets the user's about", async () => {
+		const about = await user.getAbout();
+		expect(about.name).toBe('AutoShonenpon');
+	});
+
+	it("gets the user's posts and comments", async () => {
+		const overview = await user.getOverview({ sort: 'top' });
+		expect(overview[0].type).toBe('post');
 	});
 
 	it("gets the user's posts", async () => {
@@ -31,5 +36,10 @@ describe('Subreddit methods', () => {
 	it("gets the user's comments", async () => {
 		const comments = await user.getComments({ limit: 3, sort: 'top' });
 		expect(comments.length).toBe(3);
+	});
+
+	it("gets the user's gilded posts and comments", async () => {
+		const gilded = await user.getGilded();
+		expect(gilded[0].type).toBe('post');
 	});
 });
