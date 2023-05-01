@@ -3,6 +3,10 @@ import type { ListingResponseFull, TResponse } from './types/redditAPIResponse.j
 import { SubredditData } from './types/subreddit.js';
 import { Comment } from './types/comment.js';
 
+function extractData<T>(res: ListingResponseFull<TResponse<T>[]>) {
+	return res.data.children.map((v) => v.data);
+}
+
 function extractOverviewData(
 	res: ListingResponseFull<TResponse<SubredditData | Comment>[]>
 ): ((SubredditData & { type: 'post' }) | (Comment & { type: 'comment' }))[] {
@@ -18,6 +22,21 @@ function extractOverviewData(
 	});
 }
 
+type UserSortOptions = 'hot' | 'new' | 'top' | 'controversial';
+type UserTOptions = 'hour' | 'day' | 'week' | 'month' | 'year' | 'all';
+
+type GetOptions = {
+	context?: number;
+	show?: 'given';
+	t?: UserTOptions;
+	type?: 'links' | 'comments';
+	sort?: UserSortOptions;
+	after?: string;
+	before?: string;
+	count?: number;
+	limit?: number;
+};
+
 export class User {
 	private _reddit: Jsrwrap;
 
@@ -25,10 +44,27 @@ export class User {
 		this._reddit = _reddit;
 	}
 
-	async getOverview() {
+	async getOverview(options?: GetOptions) {
 		const res = await this._reddit.get<ListingResponseFull<TResponse<SubredditData | Comment>[]>>(
-			`user/${this.username}/overview`
+			`user/${this.username}/overview`,
+			{ ...options }
 		);
 		return extractOverviewData(res);
+	}
+
+	async getSubmitted(options?: GetOptions) {
+		const res = await this._reddit.get<ListingResponseFull<TResponse<SubredditData>[]>>(
+			`user/${this.username}/submitted`,
+			{ ...options }
+		);
+		return extractData<SubredditData>(res);
+	}
+
+	async getComments(options?: GetOptions) {
+		const res = await this._reddit.get<ListingResponseFull<TResponse<Comment>[]>>(
+			`user/${this.username}/comments`,
+			{ ...options }
+		);
+		return extractData<Comment>(res);
 	}
 }

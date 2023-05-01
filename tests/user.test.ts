@@ -18,17 +18,18 @@ describe('Subreddit methods', () => {
 		user = reddit.getUser('AutoShonenpon');
 	});
 
-	it('TODO', async () => {
+	it(`gets the user's posts and comments`, async () => {
 		const overview = await user.getOverview();
-
 		expect(overview[0].type).toBe('comment');
+	});
 
-		overview.map((v) => {
-			if (v.type === 'post') {
-				console.log(v.title);
-			} else {
-				console.log(v.body);
-			}
-		});
+	it("gets the user's posts", async () => {
+		const submitted = await user.getSubmitted({ limit: 3, sort: 'top' });
+		expect(submitted[0].title).toBe('[DISC] Goodbye, Eri - Oneshot');
+	});
+
+	it("gets the user's comments", async () => {
+		const comments = await user.getComments({ limit: 3, sort: 'top' });
+		expect(comments.length).toBe(3);
 	});
 });
