@@ -32,3 +32,4 @@ export type {
 	MediaMetadata
 } from './submission.js';
 export type { CommentContributionSettings, SubredditData } from './subreddit.js';
+export type { RedditUser, RedditUserSubreddit } from './redditAccount.js';

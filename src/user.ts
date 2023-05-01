@@ -23,8 +23,8 @@ function extractOverviewData(
 	});
 }
 
-type UserSortOptions = 'hot' | 'new' | 'top' | 'controversial';
-type UserTOptions = 'hour' | 'day' | 'week' | 'month' | 'year' | 'all';
+export type UserSortOptions = 'hot' | 'new' | 'top' | 'controversial';
+export type UserTOptions = 'hour' | 'day' | 'week' | 'month' | 'year' | 'all';
 
 type GetOptions = {
 	context?: number;
