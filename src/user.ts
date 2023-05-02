@@ -1,6 +1,6 @@
 import { Jsrwrap } from './jsrwrap.js';
 import type { ListingResponseFull, TResponse } from './types/redditAPIResponse.js';
-import { SubredditData } from './types/subreddit.js';
+import { SubmissionData } from 'types/submission.js';
 import { Comment } from './types/comment.js';
 import { RedditUser } from './types/redditAccount.js';
 
@@ -9,13 +9,13 @@ function extractData<T>(res: ListingResponseFull<TResponse<T>[]>) {
 }
 
 function extractOverviewData(
-	res: ListingResponseFull<TResponse<SubredditData | Comment>[]>
-): ((SubredditData & { type: 'post' }) | (Comment & { type: 'comment' }))[] {
+	res: ListingResponseFull<TResponse<SubmissionData | Comment>[]>
+): ((SubmissionData & { type: 'post' }) | (Comment & { type: 'comment' }))[] {
 	return res.data.children.map((v) => {
 		let type: 'comment' | 'post';
 		if (v.kind === 't3') {
 			type = 'post' as const;
-			return { ...v.data, type } as SubredditData & { type: 'post' };
+			return { ...v.data, type } as SubmissionData & { type: 'post' };
 		} else {
 			type = 'comment' as const;
 			return { ...v.data, type } as Comment & { type: 'comment' };
@@ -51,7 +51,7 @@ export class User {
 	}
 
 	async getOverview(options?: GetOptions) {
-		const res = await this._reddit.get<ListingResponseFull<TResponse<SubredditData | Comment>[]>>(
+		const res = await this._reddit.get<ListingResponseFull<TResponse<SubmissionData | Comment>[]>>(
 			`user/${this.username}/overview`,
 			{ ...options }
 		);
@@ -59,11 +59,11 @@ export class User {
 	}
 
 	async getSubmitted(options?: GetOptions) {
-		const res = await this._reddit.get<ListingResponseFull<TResponse<SubredditData>[]>>(
+		const res = await this._reddit.get<ListingResponseFull<TResponse<SubmissionData>[]>>(
 			`user/${this.username}/submitted`,
 			{ ...options }
 		);
-		return extractData<SubredditData>(res);
+		return extractData<SubmissionData>(res);
 	}
 
 	async getComments(options?: GetOptions) {
@@ -75,7 +75,7 @@ export class User {
 	}
 
 	async getGilded(options?: GetOptions) {
-		const res = await this._reddit.get<ListingResponseFull<TResponse<SubredditData | Comment>[]>>(
+		const res = await this._reddit.get<ListingResponseFull<TResponse<SubmissionData | Comment>[]>>(
 			`user/${this.username}/gilded`,
 			{ ...options }
 		);
