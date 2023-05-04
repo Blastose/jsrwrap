@@ -1,6 +1,6 @@
 import { Jsrwrap } from './jsrwrap.js';
 import type { ListingResponseFull, TResponse } from './types/redditAPIResponse.js';
-import { SubmissionData } from 'types/submission.js';
+import { SubmissionData } from './types/submission.js';
 import { Comment } from './types/comment.js';
 import { RedditUser } from './types/redditAccount.js';
 
