@@ -3,7 +3,7 @@
 		"allowJs": true,
 		"baseUrl": "src",
 		"target": "es6",
-		"module": "es6",
+		"module": "Node16",
 		"declaration": true,
 		"outDir": "./lib",
 		"strict": true,

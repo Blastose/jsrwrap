@@ -126,7 +126,7 @@ export interface MediaMetadata {
 }
 
 export interface MediaMetadataImage {
-	status: 'valid';
+	status: 'valid' | 'unprocessed';
 	e: 'Image';
 	m: 'image/png' | 'image/jpg';
 	p?: AlbumEntry[];

@@ -65,7 +65,9 @@ export interface Comment {
 	id: string;
 	is_submitter: boolean;
 	likes: boolean | null;
+	link_author?: string; // from overview endpoint
 	link_id: string;
+	link_title?: string; // from overview endpoint
 	locked: boolean;
 	media_metadata?: MediaMetadata;
 	mod_note: string | null;
@@ -74,6 +76,7 @@ export interface Comment {
 	mod_reports: string[];
 	name: string;
 	no_follow: boolean;
+	num_comments?: number; // from overview endpoint
 	num_reports: number | null;
 	parent_id: string;
 	permalink: string;

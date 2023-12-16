@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import { Subreddit } from './subreddit.js';
 import { Submission } from './submission.js';
+import { User } from './user.js';
 
 type Scope =
 	| 'identity'
@@ -371,6 +372,10 @@ export class Jsrwrap {
 
 	getSubmission(submissionId: string) {
 		return new Submission(this, submissionId);
+	}
+
+	getUser(username: string) {
+		return new User(this, username);
 	}
 }
 
