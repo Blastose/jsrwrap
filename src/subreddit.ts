@@ -1,6 +1,6 @@
 import { Jsrwrap } from './jsrwrap.js';
 import type { SubmissionData } from './types/submission.js';
-import type { SubredditData } from './types/subreddit.js';
+import type { SubredditData, SubredditGatewayData } from './types/subreddit.js';
 import type { ListingResponse, TResponse } from './types/redditAPIResponse.js';
 
 type ListingParams = {
@@ -45,5 +45,14 @@ export class Subreddit {
 			options.params
 		);
 		return parseListingResponse(res);
+	}
+
+	async getSidebar() {
+		const res = await fetch(
+			`https://gateway.reddit.com/desktopapi/v1/subreddits/${this.subreddit}?allow_over18=1&include=structuredStyles`
+		);
+
+		const subGatewayData = (await res.json()) as SubredditGatewayData;
+		return subGatewayData.structuredStyles.data;
 	}
 }

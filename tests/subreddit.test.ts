@@ -41,4 +41,9 @@ describe('Subreddit methods', () => {
 		const about = await subreddit.getAbout();
 		expect(about.title).toBe('Python');
 	});
+
+	it.only('gets the subreddit sidebar info', async () => {
+		const sidebar = await subreddit.getSidebar();
+		expect(sidebar.content.widgets.layout.idCardWidget).toBe('widget_id-card-2qh0y');
+	});
 });
