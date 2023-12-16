@@ -17,6 +17,14 @@ type GetSubmissionOptions = {
 	params?: ListingParams & { t?: Time };
 };
 
+type SearchParamsSort = 'relevance' | 'hot' | 'top' | 'new' | 'comments';
+type SearchParams = ListingParams & {
+	sort?: SearchParamsSort;
+	t?: Time;
+	q?: string;
+	restrict_sr?: boolean;
+};
+
 function parseListingResponse<T>(res: ListingResponse<T>) {
 	return res.data.children.map((child) => {
 		return child.data;
@@ -43,6 +51,14 @@ export class Subreddit {
 		const res = await this._reddit.get<ListingResponse<SubmissionData>>(
 			`r/${this.subreddit}/${options.sort}`,
 			options.params
+		);
+		return parseListingResponse(res);
+	}
+
+	async search(params: SearchParams) {
+		const res = await this._reddit.get<ListingResponse<SubmissionData>>(
+			`r/${this.subreddit}/search`,
+			params
 		);
 		return parseListingResponse(res);
 	}
