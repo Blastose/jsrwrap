@@ -47,3 +47,4 @@ export type {
 	WidgetSubredditRules,
 	WidgetImage
 } from './subreddit.js';
+export type { RedditUser, RedditUserSubreddit } from './redditAccount.js';
