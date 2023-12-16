@@ -114,6 +114,15 @@ export interface CommentContributionSettings {
 }
 
 export interface SubredditGatewayData {
+	subreddits: {
+		[key: string]: {
+			title: string;
+			displayText: string;
+			name: string;
+			url: string;
+			isNSFW: boolean;
+		};
+	};
 	subredditAboutInfo: {
 		[key: string]: {
 			accountsActive: number;
@@ -225,7 +234,7 @@ export type WidgetImage = WidgetBase & {
 	data: {
 		url: string;
 		width: number;
-		linkUrl: string;
+		linkUrl: string | null;
 		height: string;
 	}[];
 };
