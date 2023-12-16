@@ -197,7 +197,7 @@ export type WidgetModerators = WidgetBase & {
 	totalMods: number;
 };
 
-export type WidgetMenu = WidgetBase & {
+export type WidgetMenu = Omit<WidgetBase, 'shortName'> & {
 	kind: 'menu';
 	data: {
 		url?: string;
