@@ -210,10 +210,10 @@ export type WidgetMenu = Omit<WidgetBase, 'shortName'> & {
 export type WidgetIdCard = WidgetBase & {
 	kind: 'id-card';
 	description: string;
-	subscribersText: string;
+	subscribersText: string | null;
 	currentlyViewingCount: number;
 	subscribersCount: number;
-	currentlyViewingText: string;
+	currentlyViewingText: string | null;
 };
 
 export type WidgetSubredditRules = WidgetBase & {
@@ -239,6 +239,29 @@ export type WidgetImage = WidgetBase & {
 	}[];
 };
 
+export type WidgetCalendar = WidgetBase & {
+	kind: 'calendar';
+	requiresSync: boolean;
+	configuration: {
+		showDescription: boolean;
+		numEvents: number;
+		showTime: boolean;
+		showLocation: boolean;
+		showTitle: boolean;
+		showData: boolean;
+	};
+	data: {
+		titleHtml: string;
+		locationHtml: string;
+		allDay: boolean;
+		description: string | null;
+		title: string;
+		location: string;
+		startTime: number;
+		endTime: number;
+	}[];
+};
+
 export type Widget =
 	| WidgetTextarea
 	| WidgetButton
@@ -248,7 +271,8 @@ export type Widget =
 	| WidgetMenu
 	| WidgetIdCard
 	| WidgetSubredditRules
-	| WidgetImage;
+	| WidgetImage
+	| WidgetCalendar;
 
 export interface StructuredStyles {
 	data: {
