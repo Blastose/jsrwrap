@@ -46,6 +46,7 @@ export type {
 	WidgetIdCard,
 	WidgetSubredditRules,
 	WidgetImage,
-	WidgetCalendar
+	WidgetCalendar,
+	WidgetCustom
 } from './subreddit.js';
 export type { RedditUser, RedditUserSubreddit } from './redditAccount.js';

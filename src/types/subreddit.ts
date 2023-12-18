@@ -152,12 +152,21 @@ export type WidgetTextarea = WidgetBase & {
 export type WidgetButton = WidgetBase & {
 	kind: 'button';
 	description: string;
-	buttons: {
-		url: string;
-		text: string;
-		kind: 'text';
-		color: string;
-	}[];
+	buttons:
+		| {
+				url: string;
+				text: string;
+				kind: 'text';
+				color: string;
+		  }
+		| {
+				url: string;
+				text: string;
+				kind: 'image';
+				height: number;
+				width: number;
+				linkUrl: string;
+		  }[];
 	descriptionHtml: string;
 };
 
@@ -181,7 +190,7 @@ export type WidgetPostFlair = WidgetBase & {
 	templates: {
 		[key: string]: {
 			text: string;
-			richtext: { e: string; t: string }[];
+			richtext: FlairRichtext[];
 			backgroundColor: string;
 			templateId: string;
 			textColor: 'light' | 'dark';
@@ -223,7 +232,7 @@ export type WidgetSubredditRules = WidgetBase & {
 		description: string;
 		createdUtc: number;
 		priority: number;
-		descriptionHtml: string;
+		descriptionHtml: string | null;
 		shortName: string;
 	}[];
 	display: string;
@@ -262,6 +271,16 @@ export type WidgetCalendar = WidgetBase & {
 	}[];
 };
 
+export type WidgetCustom = WidgetBase & {
+	kind: 'custom';
+	imageData: { url: string; width: number; name: string; height: number }[];
+	text: string;
+	stylesheetUrl: string;
+	height: number;
+	textHtml: string;
+	css: string;
+};
+
 export type Widget =
 	| WidgetTextarea
 	| WidgetButton
@@ -272,7 +291,8 @@ export type Widget =
 	| WidgetIdCard
 	| WidgetSubredditRules
 	| WidgetImage
-	| WidgetCalendar;
+	| WidgetCalendar
+	| WidgetCustom;
 
 export interface StructuredStyles {
 	data: {
