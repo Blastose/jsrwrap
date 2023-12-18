@@ -152,7 +152,7 @@ export type WidgetTextarea = WidgetBase & {
 export type WidgetButton = WidgetBase & {
 	kind: 'button';
 	description: string;
-	buttons:
+	buttons: (
 		| {
 				url: string;
 				text: string;
@@ -166,7 +166,8 @@ export type WidgetButton = WidgetBase & {
 				height: number;
 				width: number;
 				linkUrl: string;
-		  }[];
+		  }
+	)[];
 	descriptionHtml: string;
 };
 
