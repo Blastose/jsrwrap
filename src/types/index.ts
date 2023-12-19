@@ -31,5 +31,22 @@ export type {
 	GalleryData,
 	MediaMetadata
 } from './submission.js';
-export type { CommentContributionSettings, SubredditData } from './subreddit.js';
+export type {
+	CommentContributionSettings,
+	SubredditData,
+	StructuredStyles,
+	StructuredStylesStyle,
+	Widget,
+	WidgetTextarea,
+	WidgetButton,
+	WidgetCommunityList,
+	WidgetPostFlair,
+	WidgetModerators,
+	WidgetMenu,
+	WidgetIdCard,
+	WidgetSubredditRules,
+	WidgetImage,
+	WidgetCalendar,
+	WidgetCustom
+} from './subreddit.js';
 export type { RedditUser, RedditUserSubreddit } from './redditAccount.js';

@@ -112,3 +112,255 @@ type AllowedMediaTypes = 'giphy' | 'static' | 'animated';
 export interface CommentContributionSettings {
 	allowed_media_types: AllowedMediaTypes[];
 }
+
+export interface SubredditGatewayData {
+	subreddits: {
+		[key: string]: {
+			title: string;
+			displayText: string;
+			name: string;
+			url: string;
+			isNSFW: boolean;
+		};
+	};
+	subredditAboutInfo: {
+		[key: string]: {
+			accountsActive: number;
+			publicDescription: string;
+			created: number;
+			subscribers: number;
+		};
+	};
+	structuredStyles: StructuredStyles;
+}
+
+export interface WidgetBase {
+	styles: {
+		headerColor: string;
+		backgroundColor: string;
+	};
+	shortName: string;
+	id: string;
+}
+
+export type WidgetTextarea = WidgetBase & {
+	kind: 'textarea';
+	textHtml: string;
+	text: string;
+};
+
+export type WidgetButton = WidgetBase & {
+	kind: 'button';
+	description: string;
+	buttons: (
+		| {
+				url: string;
+				text: string;
+				kind: 'text';
+				color: string;
+		  }
+		| {
+				url: string;
+				text: string;
+				kind: 'image';
+				height: number;
+				width: number;
+				linkUrl: string;
+		  }
+	)[];
+	descriptionHtml: string;
+};
+
+export type WidgetCommunityList = WidgetBase & {
+	kind: 'community-list';
+	data: {
+		iconUrl: string;
+		name: string;
+		prefixedName: string;
+		primaryColor: string;
+		isSubscriber: boolean;
+		type: 'subreddit';
+		subscribers: number;
+		communityIcon: string;
+		isNSFW: boolean;
+	}[];
+};
+
+export type WidgetPostFlair = WidgetBase & {
+	kind: 'post-flair';
+	templates: {
+		[key: string]: {
+			text: string;
+			richtext: FlairRichtext[];
+			backgroundColor: string;
+			templateId: string;
+			textColor: 'light' | 'dark';
+			type: 'richtext';
+		};
+	};
+	display: string;
+};
+
+export type WidgetModerators = WidgetBase & {
+	kind: 'moderators';
+	mods: unknown[];
+	totalMods: number;
+};
+
+export type WidgetMenu = Omit<WidgetBase, 'shortName'> & {
+	kind: 'menu';
+	data: {
+		url?: string;
+		children?: { url: string; text: string }[];
+		text: string;
+	}[];
+	showWiki: boolean;
+};
+
+export type WidgetIdCard = WidgetBase & {
+	kind: 'id-card';
+	description: string;
+	subscribersText: string | null;
+	currentlyViewingCount: number;
+	subscribersCount: number;
+	currentlyViewingText: string | null;
+};
+
+export type WidgetSubredditRules = WidgetBase & {
+	kind: 'subreddit-rules';
+	data: {
+		violationReason: string;
+		description: string;
+		createdUtc: number;
+		priority: number;
+		descriptionHtml: string | null;
+		shortName: string;
+	}[];
+	display: string;
+};
+
+export type WidgetImage = WidgetBase & {
+	kind: 'image';
+	data: {
+		url: string;
+		width: number;
+		linkUrl: string | null;
+		height: string;
+	}[];
+};
+
+export type WidgetCalendar = WidgetBase & {
+	kind: 'calendar';
+	requiresSync: boolean;
+	configuration: {
+		showDescription: boolean;
+		numEvents: number;
+		showTime: boolean;
+		showLocation: boolean;
+		showTitle: boolean;
+		showData: boolean;
+	};
+	data: {
+		titleHtml: string;
+		locationHtml: string;
+		allDay: boolean;
+		description: string | null;
+		title: string;
+		location: string;
+		startTime: number;
+		endTime: number;
+	}[];
+};
+
+export type WidgetCustom = WidgetBase & {
+	kind: 'custom';
+	imageData: { url: string; width: number; name: string; height: number }[];
+	text: string;
+	stylesheetUrl: string;
+	height: number;
+	textHtml: string;
+	css: string;
+};
+
+export type Widget =
+	| WidgetTextarea
+	| WidgetButton
+	| WidgetCommunityList
+	| WidgetPostFlair
+	| WidgetModerators
+	| WidgetMenu
+	| WidgetIdCard
+	| WidgetSubredditRules
+	| WidgetImage
+	| WidgetCalendar
+	| WidgetCustom;
+
+export interface StructuredStyles {
+	data: {
+		content: {
+			widgets: {
+				items: {
+					[key: string]: Widget;
+				};
+				layout: {
+					idCardWidget: string;
+					topbar: {
+						order: string[];
+					};
+					sidebar: {
+						order: string[];
+					};
+					moderatorWidget: string;
+				};
+			};
+		};
+		style: StructuredStylesStyle;
+	};
+}
+
+export interface StructuredStylesStyle {
+	menuBackgroundBlur: null;
+	bannerShowCommunityIcon: string;
+	postDownvoteIconInactive: string;
+	bannerCommunityNameFormat: string;
+	postUpvoteIconInactive: string;
+	highlightColor: null;
+	menuBackgroundOpacity: string;
+	postUpvoteCountColor: null;
+	bannerHeight: string;
+	postBackgroundColor: null;
+	mobileBannerImage: string;
+	bannerOverlayColor: string;
+	bannerCommunityName: null;
+	postDownvoteIconActive: string;
+	postUpvoteIconActive: string;
+	menuBackgroundColor: null;
+	postBackgroundImagePosition: string;
+	backgroundImage: string;
+	backgroundImagePosition: string;
+	backgroundColor: null;
+	submenuBackgroundStyle: string;
+	bannerBackgroundImagePosition: null;
+	menuLinkColorInactive: string;
+	bannerBackgroundColor: null;
+	submenuBackgroundColor: string;
+	sidebarWidgetHeaderColor: string;
+	bannerPositionedImagePosition: null;
+	bannerBackgroundImage: string;
+	postDownvoteCountColor: null;
+	postPlaceholderImagePosition: null;
+	menuLinkColorHover: string;
+	primaryColor: null;
+	sidebarWidgetBackgroundColor: string;
+	mobileKeyColor: string;
+	menuPosition: string;
+	postVoteIcons: string;
+	menuLinkColorActive: string;
+	bannerPositionedImage: null;
+	secondaryBannerPositionedImage: null;
+	menuBackgroundImage: null;
+	postBackgroundImage: string;
+	postPlaceholderImage: string;
+	communityIcon: string;
+	postTitleColor: null;
+}
