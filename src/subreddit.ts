@@ -50,24 +50,6 @@ function parseWidgets(data: SubredditGatewayData) {
 	return widgets;
 }
 
-// Unused - Keeping for if it could be used later for getSidebar
-// function getAboutFromGatewayData(data: SubredditGatewayData) {
-// 	const id = Object.keys(data.subredditAboutInfo)[0];
-// 	const about = data.subredditAboutInfo[id];
-// 	const subredditInfo = data.subreddits[id];
-// 	const style = data.structuredStyles.data.style;
-
-// 	return {
-// 		subscribers: about.subscribers,
-// 		description: about.publicDescription,
-// 		created: about.created,
-// 		accountsActive: about.accountsActive,
-// 		bannerBackgroundImage: style.bannerBackgroundImage,
-// 		mobileBannerImage: style.mobileBannerImage,
-// 		communityIcon: style.communityIcon
-// 	};
-// }
-
 export class Subreddit {
 	private _reddit: Jsrwrap;
 
