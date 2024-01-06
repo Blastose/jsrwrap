@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import { Subreddit } from './subreddit.js';
 import { Submission } from './submission.js';
 import { User } from './user.js';
@@ -34,7 +33,7 @@ type accessTokenJsonResponse = {
 };
 
 function base64Encode(str: string) {
-	return Buffer.from(str).toString('base64');
+	return btoa(str);
 }
 
 export class OAuthError extends Error {

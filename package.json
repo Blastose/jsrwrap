@@ -1,6 +1,6 @@
 {
 	"name": "jsrwrap",
-	"version": "0.1.15",
+	"version": "0.1.15-beta.1",
 	"description": "API wrapper for Reddit",
 	"repository": {
 		"type": "git",
@@ -54,8 +54,5 @@
 		"prettier": "^2.7.1",
 		"typescript": "^5.0.2",
 		"vitest": "^0.29.3"
-	},
-	"dependencies": {
-		"node-fetch": "^3.3.1"
 	}
 }
