@@ -120,7 +120,7 @@ export class Submission {
 	async fetch(options?: GetSubmissionOptions) {
 		const [submission, comments] = await this._reddit.get<
 			[SubmissionResponse, SubmissionResponseComments]
-		>(`/comments/${this.submissionId}`, options);
+		>(`comments/${this.submissionId}`, options);
 
 		return {
 			...extractSubmissionInfo(submission),

@@ -43,12 +43,20 @@ export class OAuthError extends Error {
 	}
 }
 
+// Note
+// Changes
+// Removed node-fetch
+// Use btoa for base64
+// Remove user-agent since it doesn't work on firefox client side for reddit requests
+
 export class Jsrwrap {
 	clientId: string;
 	clientSecret: string;
 	accessToken: string;
 	userAgent: string;
 	refreshToken?: string;
+	expires?: number;
+	// TODO refresh accessToken when expires is expired expires
 
 	constructor(
 		accessToken: string,
@@ -62,6 +70,7 @@ export class Jsrwrap {
 		this.clientSecret = clientSecret;
 		this.userAgent = userAgent;
 		this.refreshToken = refreshToken;
+		this.expires = undefined;
 	}
 
 	async refreshAccessToken() {
@@ -113,8 +122,7 @@ export class Jsrwrap {
 			method: 'POST',
 			headers: {
 				Authorization: `Basic ${options.httpBasicAuth}`,
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'User-Agent': options.userAgent
+				'Content-Type': 'application/x-www-form-urlencoded'
 			},
 			body: options.body
 		});
@@ -317,8 +325,7 @@ export class Jsrwrap {
 			{
 				method: 'GET',
 				headers: {
-					Authorization: `Bearer ${this.accessToken}`,
-					'User-Agent': this.userAgent
+					Authorization: `Bearer ${this.accessToken}`
 				}
 			}
 		);
@@ -335,8 +342,7 @@ export class Jsrwrap {
 			method: 'POST',
 			headers: {
 				Authorization: `Bearer ${this.accessToken}`,
-				'Content-Type': 'application/x-www-form-urlencoded',
-				'User-Agent': this.userAgent
+				'Content-Type': 'application/x-www-form-urlencoded'
 			},
 			body: `raw_json=1&${buildQueryString(params)}`
 		});
@@ -353,8 +359,7 @@ export class Jsrwrap {
 			method: 'PATCH',
 			headers: {
 				Authorization: `Bearer ${this.accessToken}`,
-				'Content-Type': 'application/json',
-				'User-Agent': this.userAgent
+				'Content-Type': 'application/json'
 			},
 			body: data
 		});

@@ -222,6 +222,7 @@ export interface Media {
 		duration: number;
 		fallback_url: string;
 		height: number;
+		width: number;
 		hls_url: string;
 		is_gif: boolean;
 		scrubber_media_url: string;

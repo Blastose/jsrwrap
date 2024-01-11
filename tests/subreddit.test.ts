@@ -42,8 +42,13 @@ describe('Subreddit methods', () => {
 		expect(about.title).toBe('Python');
 	});
 
-	it.only('gets the subreddit sidebar info', async () => {
+	it('gets the subreddit sidebar info', async () => {
 		const sidebar = await subreddit.getSidebar();
 		expect(sidebar.length).toBeGreaterThan(0);
+	});
+
+	it('gets the subreddit moderator list', async () => {
+		const moderators = await subreddit.getModerators();
+		expect(moderators.at(0)?.name).toBeTypeOf('string');
 	});
 });

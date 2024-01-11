@@ -80,6 +80,29 @@ export class Subreddit {
 		return widgets;
 	}
 
+	async getModerators() {
+		type AboutModeratorsResponse = {
+			kind: 'UserList';
+			data: {
+				children: {
+					name: string;
+					author_flair_text: string;
+					mod_permissions: string[];
+					date: number;
+					rel_id: string;
+					id: string;
+					author_flair_css_class: null;
+				}[];
+			};
+		};
+
+		const res = await this._reddit.get<AboutModeratorsResponse>(
+			`r/${this.subreddit}/about/moderators`
+		);
+
+		return res.data.children;
+	}
+
 	async search(params: SearchParams) {
 		const res = await this._reddit.get<ListingResponse<SubmissionData>>(
 			`r/${this.subreddit}/search`,
