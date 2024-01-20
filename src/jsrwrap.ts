@@ -27,8 +27,8 @@ type Scope =
 type accessTokenJsonResponse = {
 	access_token: string;
 	token_type: string;
-	expires_in: string;
 	scope: string;
+	expires_in?: number;
 	refresh_token?: string;
 };
 
@@ -56,21 +56,21 @@ export class Jsrwrap {
 	userAgent: string;
 	refreshToken?: string;
 	expires?: number;
-	// TODO refresh accessToken when expires is expired expires
 
-	constructor(
-		accessToken: string,
-		clientId: string,
-		clientSecret: string,
-		userAgent: string,
-		refreshToken?: string
-	) {
-		this.accessToken = accessToken;
-		this.clientId = clientId;
-		this.clientSecret = clientSecret;
-		this.userAgent = userAgent;
-		this.refreshToken = refreshToken;
-		this.expires = undefined;
+	constructor(options: {
+		accessToken: string;
+		clientId: string;
+		clientSecret: string;
+		userAgent: string;
+		refreshToken?: string;
+		expiresIn?: number;
+	}) {
+		this.accessToken = options.accessToken;
+		this.clientId = options.clientId;
+		this.clientSecret = options.clientSecret;
+		this.userAgent = options.userAgent;
+		this.refreshToken = options.refreshToken;
+		this.expires = options.expiresIn;
 	}
 
 	async refreshAccessToken() {
@@ -181,7 +181,7 @@ export class Jsrwrap {
 			);
 		}
 
-		return new Jsrwrap(resJson.access_token, clientId, clientSecret, userAgent);
+		return new Jsrwrap({ accessToken: resJson.access_token, clientId, clientSecret, userAgent });
 	}
 
 	/**
@@ -256,13 +256,14 @@ export class Jsrwrap {
 
 		const resJson = (await res.json()) as accessTokenJsonResponse;
 
-		return new Jsrwrap(
-			resJson.access_token,
+		return new Jsrwrap({
+			accessToken: resJson.access_token,
 			clientId,
 			clientSecret,
 			userAgent,
-			resJson.refresh_token
-		);
+			refreshToken: resJson.refresh_token,
+			expiresIn: resJson.expires_in ? resJson.expires_in + new Date().getTime() / 1000 : undefined
+		});
 	}
 
 	/**
@@ -316,10 +317,18 @@ export class Jsrwrap {
 
 		const resJson = (await res.json()) as accessTokenJsonResponse;
 
-		return new Jsrwrap(resJson.access_token, clientId, clientSecret, userAgent);
+		return new Jsrwrap({ accessToken: resJson.access_token, clientId, clientSecret, userAgent });
+	}
+
+	async checkAndRefreshExpiredAccessToken() {
+		if (!this.expires) return;
+		if (this.expires < new Date().getTime() / 1000) {
+			await this.refreshAccessToken();
+		}
 	}
 
 	async get<T>(uri: string, params?: Record<string, unknown>) {
+		await this.checkAndRefreshExpiredAccessToken();
 		const res = await fetch(
 			`https://oauth.reddit.com/${uri}?raw_json=1&${buildQueryString(params)}`,
 			{
@@ -338,6 +347,7 @@ export class Jsrwrap {
 	}
 
 	async post<T>(uri: string, params?: Record<string, unknown>) {
+		await this.checkAndRefreshExpiredAccessToken();
 		const res = await fetch(`https://oauth.reddit.com/${uri}`, {
 			method: 'POST',
 			headers: {
@@ -355,6 +365,7 @@ export class Jsrwrap {
 	}
 
 	async patch(uri: string, data: string) {
+		await this.checkAndRefreshExpiredAccessToken();
 		const res = await fetch(`https://oauth.reddit.com/${uri}`, {
 			method: 'PATCH',
 			headers: {

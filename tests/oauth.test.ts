@@ -212,35 +212,35 @@ describe('token retrieval fromApplicationOnlyAuth', () => {
 
 describe('token refresh', () => {
 	it('refreshes the access token for non-application only OAuth', async () => {
-		const reddit = new Jsrwrap(
-			process.env.ACCESS_TOKEN!,
-			process.env.CLIENT_ID!,
-			process.env.CLIENT_SECRET!,
-			'web:JsrwrapApiWrapper:v0.0.1',
-			process.env.REFRESH_TOKEN!
-		);
+		const reddit = new Jsrwrap({
+			accessToken: process.env.ACCESS_TOKEN!,
+			clientId: process.env.CLIENT_ID!,
+			clientSecret: process.env.CLIENT_SECRET!,
+			userAgent: 'web:JsrwrapApiWrapper:v0.0.1',
+			refreshToken: process.env.REFRESH_TOKEN!
+		});
 		await expect(reddit.refreshAccessToken()).resolves.not.toThrow(Error);
 	});
 
 	it('throws an error when refreshing access token with an invalid refresh token', async () => {
-		const reddit = new Jsrwrap(
-			process.env.ACCESS_TOKEN!,
-			process.env.CLIENT_ID!,
-			process.env.CLIENT_SECRET!,
-			'web:JsrwrapApiWrapper:v0.0.1',
-			'invalid_refresh_token'
-		);
+		const reddit = new Jsrwrap({
+			accessToken: process.env.ACCESS_TOKEN!,
+			clientId: process.env.CLIENT_ID!,
+			clientSecret: process.env.CLIENT_SECRET!,
+			userAgent: 'web:JsrwrapApiWrapper:v0.0.1',
+			refreshToken: 'invalid_refresh_token'
+		});
 
 		await expect(reddit.refreshAccessToken()).rejects.toThrow('Invalid refresh_token');
 	});
 
 	it('throws an error when refreshing access token without a refresh token', async () => {
-		const reddit = new Jsrwrap(
-			process.env.ACCESS_TOKEN!,
-			process.env.CLIENT_ID!,
-			process.env.CLIENT_SECRET!,
-			'web:JsrwrapApiWrapper:v0.0.1'
-		);
+		const reddit = new Jsrwrap({
+			accessToken: process.env.ACCESS_TOKEN!,
+			clientId: process.env.CLIENT_ID!,
+			clientSecret: process.env.CLIENT_SECRET!,
+			userAgent: 'web:JsrwrapApiWrapper:v0.0.1'
+		});
 		await expect(reddit.refreshAccessToken()).rejects.toThrow(
 			'No refresh_token; cannot refresh access token'
 		);

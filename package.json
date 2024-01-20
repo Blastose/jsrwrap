@@ -1,6 +1,6 @@
 {
 	"name": "jsrwrap",
-	"version": "0.1.16-beta.3",
+	"version": "0.1.16-beta.4",
 	"description": "API wrapper for Reddit",
 	"repository": {
 		"type": "git",
