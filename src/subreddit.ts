@@ -53,7 +53,7 @@ function parseWidgets(data: SubredditGatewayData) {
 export class Subreddit {
 	private _reddit: Jsrwrap;
 
-	constructor(_reddit: Jsrwrap, public subreddit: string) {
+	constructor(_reddit: Jsrwrap, public subreddit: string | undefined) {
 		this._reddit = _reddit;
 	}
 
@@ -63,6 +63,14 @@ export class Subreddit {
 	}
 
 	async getSubmissions(options: GetSubmissionOptions) {
+		if (this.subreddit === undefined) {
+			const res = await this._reddit.get<ListingResponse<SubmissionData>>(
+				`${options.sort}`,
+				options.params
+			);
+			return parseListingResponse(res);
+		}
+
 		const res = await this._reddit.get<ListingResponse<SubmissionData>>(
 			`r/${this.subreddit}/${options.sort}`,
 			options.params

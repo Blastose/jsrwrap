@@ -52,3 +52,26 @@ describe('Subreddit methods', () => {
 		expect(moderators.at(0)?.name).toBeTypeOf('string');
 	});
 });
+
+describe.only('Frontpage subreddit', () => {
+	let subreddit: Subreddit;
+
+	beforeAll(async () => {
+		const reddit = new Jsrwrap(
+			'N/A',
+			process.env.CLIENT_ID!,
+			process.env.CLIENT_SECRET!,
+			'web:JsrwrapApiWrapper:v0.0.1',
+			process.env.REFRESH_TOKEN!
+		);
+		await reddit.refreshAccessToken();
+		subreddit = reddit.getSubreddit();
+	});
+
+	it('gets Top submissions of all time', async () => {
+		const best = await subreddit.getSubmissions({
+			sort: 'best'
+		});
+		expect(best[0].title).toBeTypeOf('string');
+	});
+});

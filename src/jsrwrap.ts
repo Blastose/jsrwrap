@@ -370,7 +370,7 @@ export class Jsrwrap {
 		return res.status;
 	}
 
-	getSubreddit(subreddit: string) {
+	getSubreddit(subreddit?: string) {
 		return new Subreddit(this, subreddit);
 	}
 
