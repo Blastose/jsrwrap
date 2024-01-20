@@ -92,6 +92,29 @@ export class Jsrwrap {
 		}
 	}
 
+	private static async getAccessTokenFromRefreshToken(options: {
+		clientId: string;
+		clientSecret: string;
+		userAgent: string;
+		grantType: 'https://oauth.reddit.com/grants/installed_client';
+		refreshToken: string;
+		deviceId?: string;
+	}) {
+		const body = `grant_type=refresh_token&refresh_token=${options.refreshToken}`;
+		const res = await Jsrwrap.retrieveAccessToken({
+			httpBasicAuth: Jsrwrap.encodeClientIdAndSecret(options.clientId, options.clientSecret),
+			body,
+			userAgent: options.userAgent
+		});
+
+		if (res.status !== 200) {
+			throw new Error('Invalid refresh_token');
+		}
+
+		const accessTokenJson = (await res.json()) as accessTokenJsonResponse;
+		return accessTokenJson;
+	}
+
 	/**
 	 * Encodes clientId and clientSecret for use in HTTP Basic Auth
 	 *
@@ -128,6 +151,30 @@ export class Jsrwrap {
 		});
 
 		return res;
+	}
+
+	static calculateExpires(expires_in: number | undefined) {
+		return expires_in ? expires_in + new Date().getTime() / 1000 : undefined;
+	}
+
+	static async fromRefreshToken(options: {
+		clientId: string;
+		clientSecret: string;
+		userAgent: string;
+		grantType: 'https://oauth.reddit.com/grants/installed_client';
+		refreshToken: string;
+		deviceId?: string;
+	}) {
+		const { clientId, clientSecret, userAgent, refreshToken } = options;
+		const accessTokenJson = await Jsrwrap.getAccessTokenFromRefreshToken(options);
+		return new Jsrwrap({
+			accessToken: accessTokenJson.access_token,
+			clientId,
+			clientSecret,
+			userAgent,
+			refreshToken,
+			expiresIn: Jsrwrap.calculateExpires(accessTokenJson.expires_in)
+		});
 	}
 
 	/**
@@ -262,7 +309,7 @@ export class Jsrwrap {
 			clientSecret,
 			userAgent,
 			refreshToken: resJson.refresh_token,
-			expiresIn: resJson.expires_in ? resJson.expires_in + new Date().getTime() / 1000 : undefined
+			expiresIn: this.calculateExpires(resJson.expires_in)
 		});
 	}
 
