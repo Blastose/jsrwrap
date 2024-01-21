@@ -7,13 +7,13 @@ describe('Subreddit methods', () => {
 	let user: User;
 
 	beforeAll(async () => {
-		const reddit = new Jsrwrap(
-			'N/A',
-			process.env.CLIENT_ID!,
-			process.env.CLIENT_SECRET!,
-			'web:JsrwrapApiWrapper:v0.0.1',
-			process.env.REFRESH_TOKEN!
-		);
+		const reddit = new Jsrwrap({
+			accessToken: 'N/A',
+			clientId: process.env.CLIENT_ID!,
+			clientSecret: process.env.CLIENT_SECRET!,
+			userAgent: 'web:JsrwrapApiWrapper:v0.0.1',
+			refreshToken: process.env.REFRESH_TOKEN!
+		});
 		await reddit.refreshAccessToken();
 		user = reddit.getUser('AutoShonenpon');
 	});
@@ -38,8 +38,9 @@ describe('Subreddit methods', () => {
 		expect(comments.length).toBe(3);
 	});
 
-	it("gets the user's gilded posts and comments", async () => {
-		const gilded = await user.getGilded();
-		expect(gilded[0].type).toBe('post');
-	});
+	// Gold has been removed from reddit
+	// it("gets the user's gilded posts and comments", async () => {
+	// 	const gilded = await user.getGilded();
+	// 	expect(gilded[0].type).toBe('post');
+	// });
 });

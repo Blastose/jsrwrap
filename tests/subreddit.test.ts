@@ -7,13 +7,13 @@ describe('Subreddit methods', () => {
 	let subreddit: Subreddit;
 
 	beforeAll(async () => {
-		const reddit = new Jsrwrap(
-			'N/A',
-			process.env.CLIENT_ID!,
-			process.env.CLIENT_SECRET!,
-			'web:JsrwrapApiWrapper:v0.0.1',
-			process.env.REFRESH_TOKEN!
-		);
+		const reddit = new Jsrwrap({
+			accessToken: 'N/A',
+			clientId: process.env.CLIENT_ID!,
+			clientSecret: process.env.CLIENT_SECRET!,
+			userAgent: 'web:JsrwrapApiWrapper:v0.0.1',
+			refreshToken: process.env.REFRESH_TOKEN!
+		});
 		await reddit.refreshAccessToken();
 		subreddit = reddit.getSubreddit('python');
 	});
@@ -44,7 +44,7 @@ describe('Subreddit methods', () => {
 
 	it('gets the subreddit sidebar info', async () => {
 		const sidebar = await subreddit.getSidebar();
-		expect(sidebar.length).toBeGreaterThan(0);
+		expect(sidebar?.length).toBeGreaterThan(0);
 	});
 
 	it('gets the subreddit moderator list', async () => {
@@ -57,13 +57,13 @@ describe.only('Frontpage subreddit', () => {
 	let subreddit: Subreddit;
 
 	beforeAll(async () => {
-		const reddit = new Jsrwrap(
-			'N/A',
-			process.env.CLIENT_ID!,
-			process.env.CLIENT_SECRET!,
-			'web:JsrwrapApiWrapper:v0.0.1',
-			process.env.REFRESH_TOKEN!
-		);
+		const reddit = new Jsrwrap({
+			accessToken: 'N/A',
+			clientId: process.env.CLIENT_ID!,
+			clientSecret: process.env.CLIENT_SECRET!,
+			userAgent: 'web:JsrwrapApiWrapper:v0.0.1',
+			refreshToken: process.env.REFRESH_TOKEN!
+		});
 		await reddit.refreshAccessToken();
 		subreddit = reddit.getSubreddit();
 	});

@@ -1,6 +1,7 @@
 import { Subreddit } from './subreddit.js';
 import { Submission } from './submission.js';
 import { User } from './user.js';
+import { Me } from './me.js';
 
 type Scope =
 	| 'identity'
@@ -438,6 +439,10 @@ export class Jsrwrap {
 
 	getUser(username: string) {
 		return new User(this, username);
+	}
+
+	getMe() {
+		return new Me(this);
 	}
 }
 

@@ -32,13 +32,13 @@ describe('Submission methods', () => {
 	let reddit: Jsrwrap;
 
 	beforeAll(async () => {
-		reddit = new Jsrwrap(
-			'N/A',
-			process.env.CLIENT_ID!,
-			process.env.CLIENT_SECRET!,
-			'web:JsrwrapApiWrapper:v0.0.1',
-			process.env.REFRESH_TOKEN!
-		);
+		reddit = new Jsrwrap({
+			accessToken: 'N/A',
+			clientId: process.env.CLIENT_ID!,
+			clientSecret: process.env.CLIENT_SECRET!,
+			userAgent: 'web:JsrwrapApiWrapper:v0.0.1',
+			refreshToken: process.env.REFRESH_TOKEN!
+		});
 		await reddit.refreshAccessToken();
 	});
 

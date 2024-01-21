@@ -25,13 +25,13 @@ type SearchParams = ListingParams & {
 	restrict_sr?: boolean;
 };
 
-function parseListingResponse<T>(res: ListingResponse<T>) {
+export function parseListingResponse<T>(res: ListingResponse<T>) {
 	return res.data.children.map((child) => {
 		return child.data;
 	});
 }
 
-function extractData<T>(res: TResponse<T>) {
+export function extractData<T>(res: TResponse<T>) {
 	return res.data;
 }
 
@@ -83,7 +83,11 @@ export class Subreddit {
 			`https://gateway.reddit.com/desktopapi/v1/subreddits/${this.subreddit}?allow_over18=1&include=structuredStyles`
 		);
 
-		const subGatewayData = (await res.json()) as SubredditGatewayData;
+		let subGatewayData = (await res.json()) as unknown as any;
+		if (subGatewayData?.data?.account === null) {
+			return null;
+		}
+		subGatewayData = subGatewayData as SubredditGatewayData;
 		const widgets = parseWidgets(subGatewayData);
 		return widgets;
 	}
