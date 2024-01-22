@@ -178,6 +178,27 @@ export class Jsrwrap {
 		});
 	}
 
+	static async fromAccessAndRefreshToken(options: {
+		clientId: string;
+		clientSecret: string;
+		userAgent: string;
+		grantType: 'https://oauth.reddit.com/grants/installed_client';
+		refreshToken: string;
+		accessToken: string;
+		expiresIn: number;
+		deviceId?: string;
+	}) {
+		const { accessToken, clientId, clientSecret, userAgent, refreshToken, expiresIn } = options;
+		return new Jsrwrap({
+			accessToken,
+			clientId,
+			clientSecret,
+			userAgent,
+			refreshToken,
+			expiresIn
+		});
+	}
+
 	/**
 	 * Creates a Jsrwrap object with an access token after authenticating with Reddit through username and password
 	 * Can only be used for script type apps
@@ -241,7 +262,8 @@ export class Jsrwrap {
 	 * @param options.redirectUri - The redirect_uri specified during app registration.
 	 * @param options.duration - One of `temporary` or `permanent`. Choose `temporary` if you are performing a one-time request for the user.
 	 * Choose `permanent` if you are performing ongoing tasks for the user.
-	 * @param options.scope - An array of scope strings which specify what areas of the Reddit api the bearer token can oerform.
+	 * @param options.scope - An array of scope strings which specify what areas of the Reddit api the bearer token can perform.
+	 * @param options.responseType - One of `code` or `token`. Choose `token` for implicit grant flow and `code` for application only oauth.
 	 *
 	 * @returns an authorization URL to be given to the user so they can give access to their Reddit account
 	 */
@@ -251,11 +273,12 @@ export class Jsrwrap {
 		redirectUri: string;
 		duration: 'temporary' | 'permanent';
 		scope: Scope[];
+		responseType: 'code' | 'token';
 	}): string {
-		const { clientId, state, redirectUri, duration, scope } = options;
+		const { clientId, state, redirectUri, duration, scope, responseType } = options;
 		let scopes = scope.join(' ');
 		scopes = encodeURIComponent(scopes);
-		return `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=code&state=${state}&redirect_uri=${redirectUri}&duration=${duration}&scope=${scopes}`;
+		return `https://www.reddit.com/api/v1/authorize?client_id=${clientId}&response_type=${responseType}&state=${state}&redirect_uri=${redirectUri}&duration=${duration}&scope=${scopes}`;
 	}
 
 	/**

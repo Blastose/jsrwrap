@@ -11,7 +11,8 @@ describe('Jsrwrap static methods', () => {
 				state: 'state_123',
 				redirectUri: 'http://localhost:5173',
 				duration: 'permanent',
-				scope: ['*']
+				scope: ['*'],
+				responseType: 'code'
 			})
 		).toBe(
 			'https://www.reddit.com/api/v1/authorize?client_id=T_OJ428Xl6SYT52iyI8VKA&response_type=code&state=state_123&redirect_uri=http://localhost:5173&duration=permanent&scope=*'
