@@ -93,6 +93,21 @@ export class Jsrwrap {
 		}
 	}
 
+	async revokeToken(options: { token: string; type: 'refresh_token' | 'access_token' }) {
+		const httpBasicAuth = Jsrwrap.encodeClientIdAndSecret(this.clientId, this.clientSecret);
+		const res = await fetch('https://www.reddit.com/api/v1/revoke_token', {
+			method: 'POST',
+			headers: {
+				Authorization: `Basic ${httpBasicAuth}`,
+				'Content-Type': 'application/x-www-form-urlencoded'
+			},
+			body: `token=${options.token}&token_type_hint=${options.type}`
+		});
+		if (res.status === 401) {
+			throw new Error('Invalid HTTP Basic Authorization');
+		}
+	}
+
 	private static async getAccessTokenFromRefreshToken(options: {
 		clientId: string;
 		clientSecret: string;
