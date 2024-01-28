@@ -57,6 +57,8 @@ export class Jsrwrap {
 	userAgent: string;
 	refreshToken?: string;
 	expires?: number;
+	deviceId?: string;
+	retrieveAccessToken?: () => Promise<accessTokenJsonResponse>;
 
 	constructor(options: {
 		accessToken: string;
@@ -65,6 +67,8 @@ export class Jsrwrap {
 		userAgent: string;
 		refreshToken?: string;
 		expiresIn?: number;
+		deviceId?: string;
+		retrieveAccessToken?: () => Promise<accessTokenJsonResponse>;
 	}) {
 		this.accessToken = options.accessToken;
 		this.clientId = options.clientId;
@@ -72,6 +76,8 @@ export class Jsrwrap {
 		this.userAgent = options.userAgent;
 		this.refreshToken = options.refreshToken;
 		this.expires = options.expiresIn;
+		this.deviceId = options.deviceId;
+		this.retrieveAccessToken = options.retrieveAccessToken;
 	}
 
 	async refreshAccessToken() {
@@ -86,8 +92,9 @@ export class Jsrwrap {
 			if (res.status !== 200) {
 				throw new Error('Invalid refresh_token');
 			}
-
-			this.accessToken = ((await res.json()) as accessTokenJsonResponse).access_token;
+			const accessTokenJson = (await res.json()) as accessTokenJsonResponse;
+			this.accessToken = accessTokenJson.access_token;
+			this.expires = Jsrwrap.calculateExpires(accessTokenJson.expires_in);
 		} else {
 			throw new Error('No refresh_token; cannot refresh access token');
 		}
@@ -378,38 +385,58 @@ export class Jsrwrap {
 		deviceId?: string;
 	}) {
 		const { clientId, clientSecret, userAgent, grantType, deviceId } = options;
-		let body = `grant_type=${grantType}`;
 
-		if (grantType === 'https://oauth.reddit.com/grants/installed_client') {
-			if (!deviceId) {
-				throw new OAuthError('deviceId is required when using the installed_client grant');
+		async function retrieveAccessToken() {
+			let body = `grant_type=${grantType}`;
+
+			if (grantType === 'https://oauth.reddit.com/grants/installed_client') {
+				if (!deviceId) {
+					throw new OAuthError('deviceId is required when using the installed_client grant');
+				}
+				if (deviceId.length < 20 || deviceId.length > 30) {
+					throw new OAuthError('deviceId must be between 20-30 characters');
+				}
+				body = `${body}&device_id=${deviceId}`;
 			}
-			if (deviceId.length < 20 || deviceId.length > 30) {
-				throw new OAuthError('deviceId must be between 20-30 characters');
+
+			const res = await Jsrwrap.retrieveAccessToken({
+				httpBasicAuth: Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
+				body,
+				userAgent
+			});
+
+			if (res.status !== 200) {
+				// Reddit returns a 401 response when Authorization value is not valid
+				throw new OAuthError('Invalid clientId or clientSecret');
 			}
-			body = `${body}&device_id=${deviceId}`;
+
+			return (await res.json()) as accessTokenJsonResponse;
 		}
 
-		const res = await this.retrieveAccessToken({
-			httpBasicAuth: Jsrwrap.encodeClientIdAndSecret(clientId, clientSecret),
-			body,
-			userAgent
+		const resJson = await retrieveAccessToken();
+
+		return new Jsrwrap({
+			accessToken: resJson.access_token,
+			clientId,
+			clientSecret,
+			userAgent,
+			expiresIn: this.calculateExpires(resJson.expires_in),
+			retrieveAccessToken
 		});
-
-		if (res.status !== 200) {
-			// Reddit returns a 401 response when Authorization value is not valid
-			throw new OAuthError('Invalid clientId or clientSecret');
-		}
-
-		const resJson = (await res.json()) as accessTokenJsonResponse;
-
-		return new Jsrwrap({ accessToken: resJson.access_token, clientId, clientSecret, userAgent });
 	}
 
 	async checkAndRefreshExpiredAccessToken() {
 		if (!this.expires) return;
 		if (this.expires < new Date().getTime() / 1000) {
-			await this.refreshAccessToken();
+			if (this.refreshToken) {
+				await this.refreshAccessToken();
+			} else if (this.retrieveAccessToken) {
+				const res = await this.retrieveAccessToken();
+				this.accessToken = res.access_token;
+				this.expires = Jsrwrap.calculateExpires(res.expires_in);
+			} else {
+				throw new Error('Access token has expired');
+			}
 		}
 	}
 
