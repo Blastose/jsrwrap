@@ -185,7 +185,16 @@ export interface ImagePreview {
 	id: string;
 	resolutions: Source[];
 	source: Source;
-	variants: unknown;
+	variants?: {
+		gif?: ImageResAndSource;
+		mp4?: ImageResAndSource;
+		nsfw?: ImageResAndSource;
+		obfuscated?: ImageResAndSource;
+	};
+}
+export interface ImageResAndSource {
+	resolutions: Source[];
+	source: Source;
 }
 
 export interface Source {
