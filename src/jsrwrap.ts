@@ -205,9 +205,9 @@ export class Jsrwrap {
 		clientSecret: string;
 		userAgent: string;
 		grantType: 'https://oauth.reddit.com/grants/installed_client';
-		refreshToken: string;
 		accessToken: string;
 		expiresIn: number;
+		refreshToken?: string;
 		deviceId?: string;
 	}) {
 		const { accessToken, clientId, clientSecret, userAgent, refreshToken, expiresIn } = options;
@@ -371,6 +371,7 @@ export class Jsrwrap {
 	 * When using `installed_client`, deviceId must also be passed in.
 	 * Use `installed_client` for installed app types and use `client_credentials` for confidential app types (web app / script).
 	 * @param options.deviceId - A unique, per-device ID. Required when using grantType=https://oauth.reddit.com/grants/installed_client. Must be between 20-30 characters.
+	 * @param options.existingAccessToken - An existing access token that has not expired yet. Used to skip a call for a fresh access token if an existing access token is still valid.
 	 *
 	 * @returns a Jsrwrap object with a valid access token
 	 *
@@ -383,6 +384,10 @@ export class Jsrwrap {
 		userAgent: string;
 		grantType: 'client_credentials' | 'https://oauth.reddit.com/grants/installed_client';
 		deviceId?: string;
+		existingAccessToken?: {
+			accessToken: string;
+			expires: number;
+		};
 	}) {
 		const { clientId, clientSecret, userAgent, grantType, deviceId } = options;
 
@@ -411,6 +416,17 @@ export class Jsrwrap {
 			}
 
 			return (await res.json()) as accessTokenJsonResponse;
+		}
+
+		if (options.existingAccessToken) {
+			return new Jsrwrap({
+				accessToken: options.existingAccessToken.accessToken,
+				clientId,
+				clientSecret,
+				userAgent,
+				expiresIn: options.existingAccessToken.expires,
+				retrieveAccessToken
+			});
 		}
 
 		const resJson = await retrieveAccessToken();
