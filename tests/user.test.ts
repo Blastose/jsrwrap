@@ -25,17 +25,17 @@ describe('Subreddit methods', () => {
 
 	it("gets the user's posts and comments", async () => {
 		const overview = await user.getOverview({ sort: 'top' });
-		expect(overview[0].type).toBe('post');
+		expect(overview.data[0].type).toBe('post');
 	});
 
 	it("gets the user's posts", async () => {
 		const submitted = await user.getSubmitted({ limit: 3, sort: 'top' });
-		expect(submitted[0].title).toBe('[DISC] Goodbye, Eri - Oneshot');
+		expect(submitted.data[0].title).toBe('[DISC] Goodbye, Eri - Oneshot');
 	});
 
 	it("gets the user's comments", async () => {
 		const comments = await user.getComments({ limit: 3, sort: 'top' });
-		expect(comments.length).toBe(3);
+		expect(comments.data.length).toBe(3);
 	});
 
 	// Gold has been removed from reddit

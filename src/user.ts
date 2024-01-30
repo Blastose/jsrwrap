@@ -55,7 +55,13 @@ export class User {
 			`user/${this.username}/overview`,
 			{ ...options }
 		);
-		return extractOverviewData(res);
+
+		return {
+			data: extractOverviewData(res),
+			before: res.data.before,
+			after: res.data.after,
+			dist: res.data.dist
+		};
 	}
 
 	async getSubmitted(options?: GetOptions) {
@@ -63,17 +69,29 @@ export class User {
 			`user/${this.username}/submitted`,
 			{ ...options }
 		);
-		return extractData<SubmissionData>(res);
+		return {
+			data: extractData<SubmissionData>(res).map((v) => {
+				return { ...v, type: 'post' };
+			}) as (SubmissionData & { type: 'post' })[],
+			before: res.data.before,
+			after: res.data.after,
+			dist: res.data.dist
+		};
 	}
 
 	async getComments(options?: GetOptions) {
-		const res = await this._reddit.get<ListingResponseFull<TResponse<Comment>[]>>(
-			`user/${this.username}/comments`,
-			{ ...options }
-		);
-		return extractData<Comment>(res);
+		const res = await this._reddit.get<
+			ListingResponseFull<TResponse<Comment & { type: 'comment' }>[]>
+		>(`user/${this.username}/comments`, { ...options });
+		return {
+			data: extractData<Comment & { type: 'comment' }>(res),
+			before: res.data.before,
+			after: res.data.after,
+			dist: res.data.dist
+		};
 	}
 
+	// Does not work anymore since Reddit removed gold
 	async getGilded(options?: GetOptions) {
 		const res = await this._reddit.get<ListingResponseFull<TResponse<SubmissionData | Comment>[]>>(
 			`user/${this.username}/gilded`,
