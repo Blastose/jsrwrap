@@ -50,3 +50,5 @@ export type {
 	WidgetCustom
 } from './subreddit.js';
 export type { RedditUser, RedditUserSubreddit } from './redditAccount.js';
+export type { SubbredditSearchParams, SubbredditSearchParamsSort } from '../subreddit.js';
+export type { SearchParams, SearchParamsSort } from '../search.js';

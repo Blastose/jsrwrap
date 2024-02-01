@@ -2,6 +2,7 @@ import { Subreddit } from './subreddit.js';
 import { Submission } from './submission.js';
 import { User } from './user.js';
 import { Me } from './me.js';
+import { Search } from './search.js';
 
 type Scope =
 	| 'identity'
@@ -524,6 +525,10 @@ export class Jsrwrap {
 
 	getMe() {
 		return new Me(this);
+	}
+
+	getSearch() {
+		return new Search(this);
 	}
 }
 

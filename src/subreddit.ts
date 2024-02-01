@@ -3,26 +3,27 @@ import type { SubmissionData } from './types/submission.js';
 import type { SubredditData, SubredditGatewayData, Widget } from './types/subreddit.js';
 import type { ListingResponse, TResponse } from './types/redditAPIResponse.js';
 
-type ListingParams = {
+export type ListingParams = {
 	before?: string;
 	after?: string;
 	count?: number;
 	limit?: number;
 };
 
-type Time = 'hour' | 'day' | 'week' | 'month' | 'year' | 'all';
+export type Time = 'hour' | 'day' | 'week' | 'month' | 'year' | 'all';
 
 type GetSubmissionOptions = {
 	sort: 'top' | 'controversial' | 'hot' | 'best' | 'rising' | 'new';
 	params?: ListingParams & { t?: Time };
 };
 
-type SearchParamsSort = 'relevance' | 'hot' | 'top' | 'new' | 'comments';
-type SearchParams = ListingParams & {
-	sort?: SearchParamsSort;
+export type SubbredditSearchParamsSort = 'relevance' | 'hot' | 'top' | 'new' | 'comments';
+export type SubbredditSearchParams = ListingParams & {
+	sort?: SubbredditSearchParamsSort;
 	t?: Time;
 	q?: string;
 	restrict_sr?: boolean;
+	include_over_18?: 'on';
 };
 
 export function parseListingResponse<T>(res: ListingResponse<T>) {
@@ -115,11 +116,16 @@ export class Subreddit {
 		return res.data.children;
 	}
 
-	async search(params: SearchParams) {
+	async search(params: SubbredditSearchParams) {
 		const res = await this._reddit.get<ListingResponse<SubmissionData>>(
 			`r/${this.subreddit}/search`,
 			params
 		);
-		return parseListingResponse(res);
+		return {
+			data: parseListingResponse(res),
+			before: res.data.before,
+			after: res.data.after,
+			dist: res.data.dist
+		};
 	}
 }
